@@ -19,6 +19,7 @@ class UserTransformer extends Transformer
             'profile_pic'   => isset($data->profile_pic) ? URL::to('/').'/uploads/user/' . $data->profile_pic : '',
             'dob'           => $this->nulltoBlank($data->dob),
             'gender'        => $this->nulltoBlank($data->gender),
+            'connectionCount' => isset($data->connections) ? count($data->connections) : 0, 
             'notification_count' => (int) 0
         ];
     }
