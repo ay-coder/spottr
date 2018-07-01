@@ -6,6 +6,7 @@ use App\Http\Transformers\PostsTransformer;
 use App\Http\Controllers\Api\BaseApiController;
 use App\Repositories\Posts\EloquentPostsRepository;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Access\User\User;
 
 class APIPostsController extends BaseApiController
 {
@@ -75,7 +76,14 @@ class APIPostsController extends BaseApiController
      */
     public function my(Request $request)
     {
-        $userInfo   = $this->getAuthenticatedUser();
+        if($request->get('user_id'))
+        {
+            $userInfo = User::where('id', $request->get('user_id'))->first();
+        }
+        else
+        {
+            $userInfo   = $this->getAuthenticatedUser();
+        }
         $paginate   = $request->get('paginate') ? $request->get('paginate') : false;
         $orderBy    = $request->get('orderBy') ? $request->get('orderBy') : 'id';
         $order      = $request->get('order') ? $request->get('order') : 'DESC';
