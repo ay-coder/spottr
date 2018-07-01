@@ -33,6 +33,7 @@ class PostsTransformer extends Transformer
             'name'          => $this->nulltoBlank($item->tag_user->name),
             'email'         => $this->nulltoBlank($item->tag_user->email),
             'phone'         => $this->nulltoBlank($item->tag_user->phone),
+            'viewCount'     => (int) 50,
             'profile_pic'   => isset($item->tag_user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->tag_user->profile_pic : '',
          ];
     }
@@ -52,21 +53,44 @@ class PostsTransformer extends Transformer
         foreach($items as $item)
         {
             $item->user = (object)$item->user;
+            $isRead     = in_array($item->id, $userReadPostIds) ? 1 :0;
 
-            $response[] = [
-                "post_id"       => (int) $item->id, 
-                "user_id"       => (int) $item->user_id,
-                "tag_user_id"   => (int) $item->tag_user_id,
-                "media"         =>  URL::to('/').'/uploads/media/' . $item->media, 
-                "description"   =>  $item->description,
-                "is_image"      => (int) $item->is_image,
-                "is_video"      => (int) $item->is_video,
-                'name'          => $this->nulltoBlank($item->user->name),
-                'email'         => $this->nulltoBlank($item->user->email),
-                'phone'         => $this->nulltoBlank($item->user->phone),
-                'profile_pic'   => isset($item->user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->user->profile_pic : '',
-                'is_read'       => in_array($item->id, $userReadPostIds) ? 1 :0
-            ];
+            if($isRead == 0) 
+            {
+                $response['unread'][] = [
+                    "post_id"       => (int) $item->id, 
+                    "user_id"       => (int) $item->user_id,
+                    "tag_user_id"   => (int) $item->tag_user_id,
+                    "media"         =>  URL::to('/').'/uploads/media/' . $item->media, 
+                    "description"   =>  $item->description,
+                    "is_image"      => (int) $item->is_image,
+                    "is_video"      => (int) $item->is_video,
+                    'name'          => $this->nulltoBlank($item->user->name),
+                    'email'         => $this->nulltoBlank($item->user->email),
+                    'phone'         => $this->nulltoBlank($item->user->phone),
+                    'viewCount'     => (int) 50,
+                    'profile_pic'   => isset($item->user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->user->profile_pic : '',
+                    'is_read'       => 0
+                ];
+            }
+            else
+            {
+                $response['read'][] = [
+                    "post_id"       => (int) $item->id, 
+                    "user_id"       => (int) $item->user_id,
+                    "tag_user_id"   => (int) $item->tag_user_id,
+                    "media"         =>  URL::to('/').'/uploads/media/' . $item->media, 
+                    "description"   =>  $item->description,
+                    "is_image"      => (int) $item->is_image,
+                    "is_video"      => (int) $item->is_video,
+                    'name'          => $this->nulltoBlank($item->user->name),
+                    'email'         => $this->nulltoBlank($item->user->email),
+                    'phone'         => $this->nulltoBlank($item->user->phone),
+                    'viewCount'     => (int) 50,
+                    'profile_pic'   => isset($item->user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->user->profile_pic : '',
+                    'is_read'       => 1
+                ];
+            }
         }
 
         return $response;
@@ -89,6 +113,7 @@ class PostsTransformer extends Transformer
             'phone'         => $this->nulltoBlank($item->user->phone),
             'profile_pic'   => isset($item->user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->user->profile_pic : '',
             'is_read'       => 1,
+            'viewCount'     => (int) 50,
             'view_count'    => isset($item->views) ? count($item->views) : 0,
             'comments_count' => isset($item->comments) ? count($item->comments) : 0,
             'comments'      => []
