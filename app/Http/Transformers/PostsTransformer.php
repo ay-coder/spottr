@@ -48,7 +48,10 @@ class PostsTransformer extends Transformer
             $userReadPostIds = array_values($userReadPosts->unique()->toArray());
         }
 
-        $response = [];
+        $response           = [];
+        $response['unread'] = [];
+        $response['read']   = [];
+
 
         foreach($items as $item)
         {
