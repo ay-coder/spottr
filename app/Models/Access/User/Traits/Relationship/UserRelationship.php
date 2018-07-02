@@ -6,6 +6,7 @@ use App\Models\Event\Event;
 use App\Models\System\Session;
 use App\Models\Access\User\SocialLogin;
 use App\Models\Connections\Connections;
+use App\Models\Posts\Posts;
 
 /**
  * Class UserRelationship.
@@ -52,5 +53,13 @@ trait UserRelationship
     public function connections()
     {
         return $this->hasMany(Connections::class, 'user_id');
+    } 
+
+    /**
+     * @return mixed
+     */
+    public function posts()
+    {
+        return $this->hasMany(Posts::class, 'user_id');
     }    
 }
