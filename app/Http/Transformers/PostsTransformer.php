@@ -96,6 +96,44 @@ class PostsTransformer extends Transformer
         return $response;
     }
 
+    public function getMyPosts($user, $items)
+    {
+        $userReadPostIds    = [];
+        $userReadPosts      = access()->getReadPostIds($user->id);
+
+        if($userReadPosts)
+        {   
+            $userReadPostIds = array_values($userReadPosts->unique()->toArray());
+        }
+
+        $response = [];
+
+        foreach($items as $item)
+        {
+            $item->user = (object)$item->user;
+            $isRead     = in_array($item->id, $userReadPostIds) ? 1 :0;
+
+            $response[] = [
+                "post_id"       => (int) $item->id, 
+                "user_id"       => (int) $item->user_id,
+                "tag_user_id"   => (int) $item->tag_user_id,
+                "media"         =>  URL::to('/').'/uploads/media/' . $item->media, 
+                "description"   =>  $item->description,
+                "is_image"      => (int) $item->is_image,
+                "is_video"      => (int) $item->is_video,
+                'name'          => $this->nulltoBlank($item->user->name),
+                'email'         => $this->nulltoBlank($item->user->email),
+                'phone'         => $this->nulltoBlank($item->user->phone),
+                'viewCount'     => (int) 50,
+                'profile_pic'   => isset($item->user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->user->profile_pic : '',
+                'is_read'       => $isRead
+            ];
+           
+        }
+
+        return $response;
+    }
+
     public function singlePost($item)
     {
         $item->user = (object)$item->user;

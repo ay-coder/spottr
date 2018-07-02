@@ -92,7 +92,7 @@ class APIPostsController extends BaseApiController
 
         if(isset($items) && count($items))
         {
-            $itemsOutput = $this->postsTransformer->getUserPosts($userInfo, $items);
+            $itemsOutput = $this->postsTransformer->getMyPosts($userInfo, $items);
 
             return $this->successResponse($itemsOutput);
         }
