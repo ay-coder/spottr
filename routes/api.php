@@ -30,6 +30,12 @@ Route::group(['namespace' => 'Api',], function ()
     Route::post('removeotp', 'UsersController@removeOtp')->name('api.removeotp');*/
 });
 
+Route::group(['namespace' => 'Api', 'middleware' => 'jwt.customauth'], function () 
+{
+    Route::post('update-user-profile', 'UsersController@updageUserProfile')->name('api.update-user-profile');
+    Route::get('logout', 'UsersController@logout')->name('api.logout');
+});
+
 Route::group(['middleware' => 'jwt.customauth'], function () 
 {
     includeRouteFiles(__DIR__.'/Api/');

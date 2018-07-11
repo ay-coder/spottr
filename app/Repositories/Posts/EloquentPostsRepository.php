@@ -267,6 +267,25 @@ class EloquentPostsRepository extends DbRepository
     }
 
     /**
+     * Get All
+     *
+     * @param string $orderBy
+     * @param string $sort
+     * @return mixed
+     */
+    public function filterAll($condition = array(), $search, $orderBy = 'id', $sort = 'asc')
+    {
+        if(isset($condition))
+        {
+            return $this->model
+                ->where('description', 'LIKE', '%' . $search . '%')
+                ->where($condition)->with(['user', 'tag_user'])->orderBy($orderBy, $sort)->get();
+        }
+
+        return $this->model->where('description', 'LIKE', '%' . $search . '%')->with(['user', 'tag_user'])->orderBy($orderBy, $sort)->get();
+    }
+
+    /**
      * Get by Id
      *
      * @param int $id

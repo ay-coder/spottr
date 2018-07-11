@@ -74,6 +74,34 @@ class APIPostsController extends BaseApiController
      * @param Request $request
      * @return json
      */
+    public function postFilter(Request $request)
+    {
+        $search     = $request->has('keyword') ? $request->has('keyword') : '';
+        $userInfo   = $this->getAuthenticatedUser();
+        $paginate   = $request->get('paginate') ? $request->get('paginate') : false;
+        $orderBy    = $request->get('orderBy') ? $request->get('orderBy') : 'id';
+        $order      = $request->get('order') ? $request->get('order') : 'DESC';
+        $condition  = ['tag_user_id' => $userInfo->id];
+        $items      = $paginate ? $this->repository->model->with(['user', 'tag_user'])->where($condition)->where('description', 'LIKE', '%' .$search. '%')->orderBy($orderBy, $order)->paginate($paginate)->items() : $this->repository->filterAll($condition, $search, $orderBy, $order);
+
+        if(isset($items) && count($items))
+        {
+            $itemsOutput = $this->postsTransformer->getUserPosts($userInfo, $items);
+
+            return $this->successResponse($itemsOutput);
+        }
+
+        return $this->setStatusCode(400)->failureResponse([
+            'message' => 'Unable to find Posts!'
+            ], 'No Posts Found !');
+    }
+
+    /**
+     * List of All Posts
+     *
+     * @param Request $request
+     * @return json
+     */
     public function my(Request $request)
     {
         if($request->get('user_id'))

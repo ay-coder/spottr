@@ -2,6 +2,7 @@
 Route::group(['namespace' => 'Api'], function()
 {
     Route::get('posts', 'APIPostsController@index')->name('posts.index');
+    Route::post('posts-filter', 'APIPostsController@postFilter')->name('posts.posts-filter');
     Route::any('my-posts', 'APIPostsController@my')->name('posts.index');
     Route::post('posts/create', 'APIPostsController@create')->name('posts.create');
     Route::post('posts/edit', 'APIPostsController@edit')->name('posts.edit');
