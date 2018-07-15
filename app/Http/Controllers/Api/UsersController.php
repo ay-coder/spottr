@@ -430,7 +430,7 @@ class UsersController extends BaseApiController
      * @param  Request $request
      * @return json
      */
-    public function logout(Request $request) 
+    /*public function logout(Request $request) 
     {
         $userInfo   = $this->getApiUserInfo();
         $user       = User::find($userInfo['userId']);
@@ -449,5 +449,5 @@ class UsersController extends BaseApiController
         return $this->setStatusCode(400)->failureResponse([
             'reason' => 'User Not Found !'
         ], 'User Not Found !');
-    }
+    }*/
 }
