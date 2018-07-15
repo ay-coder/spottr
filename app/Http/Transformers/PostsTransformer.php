@@ -143,7 +143,8 @@ class PostsTransformer extends Transformer
 
     public function singlePost($item)
     {
-        $item->user = (object)$item->user;
+        $commentData    = [];
+        $item->user     = (object)$item->user;
 
         $response = [
             "post_id"       => (int) $item->id, 
