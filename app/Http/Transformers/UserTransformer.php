@@ -67,5 +67,40 @@ class UserTransformer extends Transformer
     
     public function transformStateCollection(array $items) {
         return array_map([$this, 'getState'], $items);
+
+    }
+
+    /**
+     * Update User
+     * 
+     * @param object $data
+     * @return array
+     */
+    public function updateUser($data)
+    {
+        $headerToken = request()->header('Authorization');
+        $userToken   = '';
+
+        if($headerToken)
+        {
+            $token      = explode(" ", $headerToken);
+            $userToken  = $token[1];
+        }
+
+        return [
+            'user_id'       => $data->id,
+            'token'         => $this->nulltoBlank($data->token),
+            'device_token'  => $data->device_token,
+            'name'          => $this->nulltoBlank($data->name),
+            'email'         => $this->nulltoBlank($data->email),
+            'phone'         => $this->nulltoBlank($data->phone),
+            'profile_pic'   => isset($data->profile_pic) ? URL::to('/').'/uploads/user/' . $data->profile_pic : '',
+            'dob'           => $this->nulltoBlank($data->dob),
+            'gender'        => $this->nulltoBlank($data->gender),
+            'description'   => 'Lorem Ipusm Lorem Ipsum description',
+            'connectionCount' => isset($data->connections) ? count($data->connections) : 0, 
+            'postCount'     => isset($data->connections) ? count($data->connections) : 0, 
+            'notification_count' => (int) 0
+        ]; 
     }
 }
