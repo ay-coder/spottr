@@ -255,7 +255,7 @@ class UsersController extends BaseApiController
      * @param Request $request
      * @return json
      */
-    public function updageUserProfile(Request $request)
+    /*public function updageUserProfile(Request $request)
     {
         $headerToken = request()->header('Authorization');
 
@@ -317,7 +317,7 @@ class UsersController extends BaseApiController
         return $this->setStatusCode(400)->failureResponse([
             'reason' => 'Invalid Inputs'
         ], 'Something went wrong !');     
-    }
+    }*/
 
     public function updageUserPassword(Request $request)
     {
