@@ -160,7 +160,8 @@ class APIPostsController extends BaseApiController
             'is_image'  => 1, 
             'is_video'  => 0, 
             'user_id'   => $userInfo->id,
-            'media'     => 'default.png'
+            'media'     => 'default.png',
+            'thumbnail' => 'default.png'
         ]);
 
         if($request->file('media'))
@@ -173,6 +174,13 @@ class APIPostsController extends BaseApiController
             {
                 $input = array_merge($input, ['is_image' => 0, 'is_video' => 1]);                
             }
+        }
+
+        if($request->file('thumbnail'))
+        {
+            $imageName  = rand(11111, 99999) . '_thumbnail.' . $request->file('thumbnail')->getClientOriginalExtension();
+            $request->file('thumbnail')->move(base_path() . '/public/uploads/media/', $imageName);
+            $input = array_merge($input, ['thumbnail' => $imageName]);
         }
 
         $model = $this->repository->create($input);

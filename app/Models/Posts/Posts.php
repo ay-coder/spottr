@@ -24,7 +24,7 @@ class Posts extends BaseModel
      *
      */
     protected $fillable = [
-        "id", "user_id", "tag_user_id", "media", "description", "is_image", "is_video", "status", "created_at", "updated_at", 
+        "id", "user_id", "tag_user_id", "media", "thumbnail", "description", "is_image", "is_video", "status", "created_at", "updated_at", 
     ];
 
     /**
