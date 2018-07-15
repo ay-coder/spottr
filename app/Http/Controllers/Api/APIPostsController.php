@@ -76,7 +76,7 @@ class APIPostsController extends BaseApiController
      */
     public function postFilter(Request $request)
     {
-        $search     = $request->has('keyword') ? $request->has('keyword') : '';
+        $search     = $request->has('keyword') ? $request->get('keyword') : '';
         $userInfo   = $this->getAuthenticatedUser();
         $paginate   = $request->get('paginate') ? $request->get('paginate') : false;
         $orderBy    = $request->get('orderBy') ? $request->get('orderBy') : 'id';

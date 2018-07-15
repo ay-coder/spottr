@@ -75,6 +75,37 @@ class APIConnectionsController extends BaseApiController
     }
 
     /**
+     * My Connections
+     * 
+     * @param Request $request
+     * @return json
+     */
+    public function myConnections(Request $request)
+    {
+        $userInfo               = $request->get('user_id') ? User::find($request->get('user_id')) : $this->getAuthenticatedUser();
+        $userModel              = new User;   
+        $connectionModel        = new Connections;
+        $myConnectionList       = $connectionModel->where('is_accepted', 1)->where('user_id', $userInfo->id)->pluck('other_user_id')->toArray();
+         $otherConnectionList    = $connectionModel->where('is_accepted', 1)->where('other_user_id', $userInfo->id)->pluck('requested_user_id')->toArray();
+            
+        $items = $userModel->where('id', '!=', $userInfo->id)
+                    ->whereIn('id', $myConnectionList)
+                    ->orWhereIn('id', $otherConnectionList)
+                    ->get();
+
+        if(isset($items) && count($items))
+        {
+            $itemsOutput = $this->connectionsTransformer->connectionTransform($items);
+
+            return $this->successResponse($itemsOutput);
+        }
+
+        return $this->setStatusCode(400)->failureResponse([
+            'message' => 'Unable to find Connections!'
+            ], 'No Connections Found !');    
+    }
+
+    /**
      * List of All Connections
      *
      * @param Request $request
