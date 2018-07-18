@@ -26,6 +26,30 @@ class UserTransformer extends Transformer
         ];
     }
     
+    public function userInfo($data)
+    {
+        $data = (object) $data;
+
+        return [
+            'user_id'       => $data->id,
+            'token'         => isset($data->token) ? $this->nulltoBlank($data->token) : '',
+            'device_token'  => $data->device_token,
+            'name'          => $this->nulltoBlank($data->name),
+            'email'         => $this->nulltoBlank($data->email),
+            'phone'         => $this->nulltoBlank($data->phone),
+            'profile_pic'   => isset($data->profile_pic) ? URL::to('/').'/uploads/user/' . $data->profile_pic : '',
+            'dob'           => $this->nulltoBlank($data->dob),
+            'gender'        => $this->nulltoBlank($data->gender),
+            'description'   => 'Lorem Ipusm Lorem Ipsum description',
+            'connectionCount' => isset($data->connections) ? count($data->connections) : 0, 
+            'postCount'     => isset($data->connections) ? count($data->connections) : 0, 
+            'notification_count' => (int) 0,
+            'is_connected'      => $data->is_connected,
+            'is_same_user'      => $data->is_same_user,
+            'show_connect_btn'  => $data->show_connect_btn
+        ];
+    }
+
     public function getUserInfo($data) 
     {
         return [

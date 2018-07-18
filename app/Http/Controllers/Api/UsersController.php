@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\BaseApiController;
 use Auth;
 use App\Repositories\Backend\Access\User\UserRepository;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Connections\Connections;
 
 class UsersController extends BaseApiController
 {
@@ -28,7 +29,8 @@ class UsersController extends BaseApiController
      */
     public function __construct()
     {
-        $this->userTransformer = new UserTransformer;
+        $this->userTransformer  = new UserTransformer;
+        
     }
 
     /**
@@ -228,13 +230,45 @@ class UsersController extends BaseApiController
     {
         if($request->get('user_id'))
         {
-            $userObj = new User;
+            $userObj            = new User;
+            $connectionModel    = new Connections;
 
-            $user = $userObj->find($request->get('user_id'));
+            $user           = $userObj->find($request->get('user_id'));
+            $userInfo       = $this->getAuthenticatedUser();
+            $sameUser       = 0;
+            $connections    = [];
+            $isConnected        = 0;
+            $showConnectionBtn  = 1;
+
+            if($userInfo->id == $request->get('user_id'))
+            {
+                $sameUser           = 1;
+                $showConnectionBtn  = 0;
+            }
+            else
+            {
+                $myConnectionList       = $connectionModel->where('is_accepted', 1)->where('user_id', $user->id)->pluck('other_user_id')->toArray();
+                $otherConnectionList    = $connectionModel->where('is_accepted', 1)->where('other_user_id', $user->id)->pluck('requested_user_id')->toArray();
+                $allConnections = array_merge($myConnectionList, $otherConnectionList);
+
+                if(in_array($userInfo->id, $allConnections))
+                {
+                    $isConnected        = 1;
+                    $showConnectionBtn  = 0;
+                }
+            }
 
             if($user)
             {
-                $responseData = $this->userTransformer->transform($user);
+                 $data = [
+                    'is_connected'      => $isConnected,
+                    'is_same_user'      => $sameUser,
+                    'show_connect_btn'  => $showConnectionBtn
+                ];
+
+                $user = $user->toArray();
+                $user = array_merge($user, $data);
+                $responseData = $this->userTransformer->userInfo($user);
                 
                 return $this->successResponse($responseData);
             }
