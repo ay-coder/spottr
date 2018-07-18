@@ -14,5 +14,7 @@ Route::group(['namespace' => 'Api'], function()
     Route::post('connections/edit', 'APIConnectionsController@edit')->name('connections.edit');
     Route::post('connections/show', 'APIConnectionsController@show')->name('connections.show');
     Route::post('connections/delete', 'APIConnectionsController@delete')->name('connections.delete');
+
+    Route::post('connections/block', 'APIConnectionsController@block')->name('connections.block');
 });
 ?>

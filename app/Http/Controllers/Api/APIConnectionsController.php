@@ -346,6 +346,55 @@ class APIConnectionsController extends BaseApiController
         ], 'Something went wrong !');
     }
 
+    /**
+     * Block
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function block(Request $request)
+    {
+        if($request->has('user_id'))
+        {
+            $userInfo               = $this->getAuthenticatedUser();
+            $connectionModel        = new Connections;
+
+            $connection = $connectionModel->where([
+                    'user_id'       => $userInfo->id,
+                    'other_user_id' => $request->get('user_id')
+            ])->first();
+
+            if(isset($connection))
+            {
+                $connection->delete();
+
+                return $this->successResponse([
+                    'success' => 'Connections Blocked'
+                ], 'Connections is Blocked Successfully');
+            }
+            
+
+            $connection = $connectionModel->where([
+                    'other_user_id' => $userInfo->id,
+                    'user_id'       => $request->get('user_id')
+            ])->first();
+
+            if(isset($connection))
+            {
+                $connection->delete();
+
+                return $this->successResponse([
+                    'success' => 'Connections Blocked'
+                ], 'Connections is Blocked Successfully');
+            }
+            
+        }
+
+        return $this->setStatusCode(404)->failureResponse([
+            'reason' => 'Invalid Inputs'
+        ], 'Something went wrong !');
+    }
+
     public function acceptRequests(Request $request)
     {
         $validator = Validator::make($request->all(), [
