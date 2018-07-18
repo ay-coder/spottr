@@ -55,7 +55,7 @@ class APIConnectionsController extends BaseApiController
         $userModel              = new User;   
         $connectionModel        = new Connections;
         $myConnectionList       = $connectionModel->where('is_accepted', 1)->where('user_id', $userInfo->id)->pluck('other_user_id')->toArray();
-         $otherConnectionList    = $connectionModel->where('is_accepted', 1)->where('other_user_id', $userInfo->id)->pluck('requested_user_id')->toArray();
+        $otherConnectionList    = $connectionModel->where('is_accepted', 1)->where('other_user_id', $userInfo->id)->pluck('requested_user_id')->toArray();
             
         $items = $userModel->where('id', '!=', $userInfo->id)
                     ->whereIn('id', $myConnectionList)
@@ -305,18 +305,40 @@ class APIConnectionsController extends BaseApiController
      */
     public function delete(Request $request)
     {
-        $itemId = (int) hasher()->decode($request->get($this->primaryKey));
-
-        if($itemId)
+        if($request->has('user_id'))
         {
-            $status = $this->repository->destroy($itemId);
+            $userInfo               = $this->getAuthenticatedUser();
+            $connectionModel        = new Connections;
 
-            if($status)
+            $connection = $connectionModel->where([
+                    'user_id'       => $userInfo->id,
+                    'other_user_id' => $request->get('user_id')
+            ])->first();
+
+            if(isset($connection))
             {
+                $connection->delete();
+
                 return $this->successResponse([
                     'success' => 'Connections Deleted'
                 ], 'Connections is Deleted Successfully');
             }
+            
+
+            $connection = $connectionModel->where([
+                    'other_user_id' => $userInfo->id,
+                    'user_id'       => $request->get('user_id')
+            ])->first();
+
+            if(isset($connection))
+            {
+                $connection->delete();
+
+                return $this->successResponse([
+                    'success' => 'Connections Deleted'
+                ], 'Connections is Deleted Successfully');
+            }
+            
         }
 
         return $this->setStatusCode(404)->failureResponse([
