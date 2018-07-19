@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\BaseApiController;
 use App\Repositories\Posts\EloquentPostsRepository;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Access\User\User;
+use App\Models\ReadPost\ReadPost;
 
 class APIPostsController extends BaseApiController
 {
@@ -213,6 +214,12 @@ class APIPostsController extends BaseApiController
             
             if($postInfo)
             {
+                $userInfo   = $this->getApiUserInfo();
+                $readPost   = new ReadPost;
+                $readPost->create([
+                    'user_id'   => $userInfo['userId'],
+                    'post_id'   => $itemId
+                ]);
                 $responseData = $this->postsTransformer->singlePost($postInfo);
 
                 return $this->successResponse($responseData, 'View Item');
