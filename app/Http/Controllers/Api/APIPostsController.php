@@ -8,6 +8,7 @@ use App\Repositories\Posts\EloquentPostsRepository;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Access\User\User;
 use App\Models\ReadPost\ReadPost;
+use Auth;
 
 class APIPostsController extends BaseApiController
 {
@@ -55,7 +56,7 @@ class APIPostsController extends BaseApiController
         $orderBy    = $request->get('orderBy') ? $request->get('orderBy') : 'id';
         $order      = $request->get('order') ? $request->get('order') : 'DESC';
         $condition  = ['tag_user_id' => $userInfo->id];
-        $items      = $paginate ? $this->repository->model->with(['user', 'tag_user'])->where($condition)->orderBy($orderBy, $order)->paginate($paginate)->items() : $this->repository->getAll($condition, $orderBy, $order);
+        $items      = $paginate ? $this->repository->model->with(['user', 'tag_user', 'views', 'comments'])->where($condition)->orderBy($orderBy, $order)->paginate($paginate)->items() : $this->repository->getAll($condition, $orderBy, $order);
 
         if(isset($items) && count($items))
         {
@@ -83,7 +84,7 @@ class APIPostsController extends BaseApiController
         $orderBy    = $request->get('orderBy') ? $request->get('orderBy') : 'id';
         $order      = $request->get('order') ? $request->get('order') : 'DESC';
         $condition  = ['tag_user_id' => $userInfo->id];
-        $items      = $paginate ? $this->repository->model->with(['user', 'tag_user'])->where($condition)->where('description', 'LIKE', '%' .$search. '%')->orderBy($orderBy, $order)->paginate($paginate)->items() : $this->repository->filterAll($condition, $search, $orderBy, $order);
+        $items      = $paginate ? $this->repository->model->with(['user', 'tag_user', 'views', 'comments'])->where($condition)->where('description', 'LIKE', '%' .$search. '%')->orderBy($orderBy, $order)->paginate($paginate)->items() : $this->repository->filterAll($condition, $search, $orderBy, $order);
 
         if(isset($items) && count($items))
         {
@@ -117,7 +118,7 @@ class APIPostsController extends BaseApiController
         $orderBy    = $request->get('orderBy') ? $request->get('orderBy') : 'id';
         $order      = $request->get('order') ? $request->get('order') : 'DESC';
         $condition  = ['user_id' => $userInfo->id];
-        $items      = $paginate ? $this->repository->model->with(['user', 'tag_user'])->where($condition)->orderBy($orderBy, $order)->paginate($paginate)->items() : $this->repository->getAll($condition, $orderBy, $order);
+        $items      = $paginate ? $this->repository->model->with(['user', 'tag_user', 'views', 'comments'])->where($condition)->orderBy($orderBy, $order)->paginate($paginate)->items() : $this->repository->getAll($condition, $orderBy, $order);
 
         if(isset($items) && count($items))
         {
@@ -214,10 +215,10 @@ class APIPostsController extends BaseApiController
             
             if($postInfo)
             {
-                $userInfo   = $this->getApiUserInfo();
+                $userId     = Auth::user()->id;
                 $readPost   = new ReadPost;
                 $readPost->create([
-                    'user_id'   => $userInfo['userId'],
+                    'user_id'   => $userId,
                     'post_id'   => $itemId
                 ]);
                 $responseData = $this->postsTransformer->singlePost($postInfo);
