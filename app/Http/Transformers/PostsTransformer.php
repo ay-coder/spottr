@@ -22,8 +22,6 @@ class PostsTransformer extends Transformer
 
         $item->tag_user = (object)$item->tag_user;
 
-        dd($item);
-
         return [
             "post_id"       => (int) $item->id, 
             "user_id"       => (int) $item->user_id,
@@ -37,6 +35,7 @@ class PostsTransformer extends Transformer
             'email'         => $this->nulltoBlank($item->tag_user->email),
             'phone'         => $this->nulltoBlank($item->tag_user->phone),
             'viewCount'     => isset($item->views) ? count($item->views) : 0,
+            'view_count'    => isset($item->views) ? count($item->views) : 0,
             'profile_pic'   => isset($item->tag_user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->tag_user->profile_pic : '',
          ];
     }
@@ -76,6 +75,7 @@ class PostsTransformer extends Transformer
                     'email'         => $this->nulltoBlank($item->user->email),
                     'phone'         => $this->nulltoBlank($item->user->phone),
                     'viewCount'     => isset($item->views) ? count($item->views) : 0,
+                    'view_count'     => isset($item->views) ? count($item->views) : 0,
                     'profile_pic'   => isset($item->user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->user->profile_pic : '',
                     'is_read'       => 0
                 ];
@@ -95,6 +95,7 @@ class PostsTransformer extends Transformer
                     'email'         => $this->nulltoBlank($item->user->email),
                     'phone'         => $this->nulltoBlank($item->user->phone),
                     'viewCount'     => isset($item->views) ? count($item->views) : 0,
+                    'view_count'     => isset($item->views) ? count($item->views) : 0,
                     'profile_pic'   => isset($item->user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->user->profile_pic : '',
                     'is_read'       => 1
                 ];
@@ -134,6 +135,7 @@ class PostsTransformer extends Transformer
                 'email'         => $this->nulltoBlank($item->user->email),
                 'phone'         => $this->nulltoBlank($item->user->phone),
                 'viewCount'     => isset($item->views) ? count($item->views) : 0,
+                'view_count'    => isset($item->views) ? count($item->views) : 0,
                 'profile_pic'   => isset($item->user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->user->profile_pic : '',
                 'is_read'       => $isRead
             ];
@@ -163,6 +165,7 @@ class PostsTransformer extends Transformer
             'profile_pic'   => isset($item->user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->user->profile_pic : '',
             'is_read'       => 1,
             'viewCount'    => isset($item->views) ? count($item->views) : 0,
+            'view_count'    => isset($item->views) ? count($item->views) : 0,
             'comments_count' => isset($item->comments) ? count($item->comments) : 0,
             'comments'      => []
         ];
