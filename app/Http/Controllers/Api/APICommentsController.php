@@ -6,6 +6,7 @@ use App\Http\Transformers\CommentsTransformer;
 use App\Http\Controllers\Api\BaseApiController;
 use App\Repositories\Comments\EloquentCommentsRepository;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Blocked\Blocked;
 
 class APICommentsController extends BaseApiController
 {
@@ -28,7 +29,7 @@ class APICommentsController extends BaseApiController
      *
      * @var string
      */
-    protected $primaryKey = 'commentsId';
+    protected $primaryKey = 'comment_id';
 
     /**
      * __construct
@@ -166,17 +167,91 @@ class APICommentsController extends BaseApiController
      */
     public function delete(Request $request)
     {
-        $itemId = (int) hasher()->decode($request->get($this->primaryKey));
+        $validator = Validator::make($request->all(), [
+            'comment_id'   => 'required'
+        ]);
 
-        if($itemId)
+        if($validator->fails()) 
         {
-            $status = $this->repository->destroy($itemId);
+            $messageData = '';
 
-            if($status)
+            foreach($validator->messages()->toArray() as $message)
             {
-                return $this->successResponse([
-                    'success' => 'Comments Deleted'
-                ], 'Comments is Deleted Successfully');
+                $messageData = $message[0];
+            }
+            return $this->failureResponse($validator->messages(), $messageData);
+        }
+
+        if($request->has('comment_id'))
+        {
+            $itemId     = $request->get('comment_id');
+            $comment    = $this->repository->model->find($itemId);
+            $userInfo   = $this->getAuthenticatedUser();
+
+            if($comment->user_id == $userInfo->id || $userInfo->posts()->where('post_id', $comment->post_id))
+            {
+                $status = $this->repository->destroy($itemId);
+
+                if($status)
+                {
+                    return $this->successResponse([
+                        'success' => 'Comments Deleted'
+                    ], 'Comments is Deleted Successfully');
+                }
+            }
+        }
+
+        return $this->setStatusCode(404)->failureResponse([
+            'reason' => 'Invalid Inputs'
+        ], 'Something went wrong !');
+    }
+
+    /**
+     * Blocked
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function blocked(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'comment_id'   => 'required'
+        ]);
+
+        if($validator->fails()) 
+        {
+            $messageData = '';
+
+            foreach($validator->messages()->toArray() as $message)
+            {
+                $messageData = $message[0];
+            }
+            return $this->failureResponse($validator->messages(), $messageData);
+        }
+
+        if($request->has('comment_id'))
+        {
+            $itemId     = $request->get('comment_id');
+            $comment    = $this->repository->model->find($itemId);
+            $userInfo   = $this->getAuthenticatedUser();
+
+            if(isset($comment->id))
+            {
+                Blocked::create([
+                    'blocked_by'    => $userInfo->id,
+                    'user_id'       => $comment->user_id,
+                    'post_id'       => $comment->post_id,
+                    'comment'       => $comment->comment
+                ]);
+
+                $status = $this->repository->destroy($itemId);
+
+                if($status)
+                {
+                    return $this->successResponse([
+                        'success' => 'Comments Blocked'
+                    ], 'Comments is Blocked Successfully');
+                }
             }
         }
 
