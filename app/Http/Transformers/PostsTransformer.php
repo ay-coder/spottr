@@ -180,7 +180,8 @@ class PostsTransformer extends Transformer
                     'user_id'       => $comment->user_id,
                     'name'          => $comment->user->name,
                     'profile_pic'   => isset($comment->user->profile_pic) ? URL::to('/').'/uploads/user/' . $comment->user->profile_pic : '',
-                    'comment'       => $comment->comment
+                    'comment'       => $comment->comment,
+                    'comment_id'    => $comment->comment->id
                 ];
             }
         }
