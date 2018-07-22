@@ -147,8 +147,9 @@ class PostsTransformer extends Transformer
 
     public function singlePost($item)
     {
-        $commentData    = [];
-        $item->user     = (object)$item->user;
+        $commentData        = [];
+        $item->user         = (object)$item->user;
+        $item->tag_user     = (object)$item->tag_user;
 
         $response = [
             "post_id"       => (int) $item->id, 
@@ -164,6 +165,8 @@ class PostsTransformer extends Transformer
             'phone'         => $this->nulltoBlank($item->user->phone),
             'profile_pic'   => isset($item->user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->user->profile_pic : '',
             'is_read'       => 1,
+            'post_user_name'     => $item->user->name,
+            'tagged_user_name'     => $item->tag_user->name,
             'viewCount'    => isset($item->views) ? count($item->views) : 0,
             'view_count'    => isset($item->views) ? count($item->views) : 0,
             'comments_count' => isset($item->comments) ? count($item->comments) : 0,
