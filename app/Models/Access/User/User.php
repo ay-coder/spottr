@@ -44,6 +44,7 @@ class User extends Authenticatable
     'profile_pic',
     'device_token',
     'dob',
+    'bio',
      'email', 'password', 'status', 'confirmation_code', 'confirmed'];
 
     /**
