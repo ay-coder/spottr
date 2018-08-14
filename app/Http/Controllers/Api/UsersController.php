@@ -252,7 +252,6 @@ class UsersController extends BaseApiController
                 $myConnectionList       = $connectionModel->where('is_accepted', 1)->where('user_id', $user->id)->pluck('other_user_id')->toArray();
                 $otherConnectionList    = $connectionModel->where('is_accepted', 1)->where('other_user_id', $user->id)->pluck('requested_user_id')->toArray();
                 $allConnections = array_merge($myConnectionList, $otherConnectionList);
-
                 if(in_array($userInfo->id, $allConnections))
                 {
                     $isConnected        = 1;
@@ -270,7 +269,7 @@ class UsersController extends BaseApiController
 
                 $user = $user->toArray();
                 $user = array_merge($user, $data);
-                $responseData = $this->userTransformer->userInfo($user);
+                $responseData = $this->userTransformer->userInfo($user, $allConnections);
                 
                 return $this->successResponse($responseData);
             }
