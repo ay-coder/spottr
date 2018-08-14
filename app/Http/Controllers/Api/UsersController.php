@@ -460,29 +460,37 @@ class UsersController extends BaseApiController
         ], 'Something went wrong !');     
     }
 
+
     /**
-     * Logout request
+     * Validate User
      * @param  Request $request
      * @return json
      */
-    /*public function logout(Request $request) 
+    public function validateUser(Request $request) 
     {
-        $userInfo   = $this->getApiUserInfo();
-        $user       = User::find($userInfo['userId']);
-
-        $user->device_token = '';
-
-        if($user->save()) 
+        if($request->has('username'))
         {
-            $successResponse = [
-                'message' => 'User Logged out successfully.'
-            ];
+            $user = User::where('username', $request->get('username'))->first();
 
-            return $this->successResponse($successResponse);
+            if(isset($user) && isset($user->id))
+            {
+                return $this->setStatusCode(400)->failureResponse([
+                    'reason' => 'User exist with Username!'
+                ], 'User exist with Username');
+            }
+            else
+            {
+                $successResponse = [
+                    'message' => 'No User found ! Continue for Signup.'
+                ];
+
+                return $this->successResponse($successResponse);
+            }
+
         }
 
         return $this->setStatusCode(400)->failureResponse([
-            'reason' => 'User Not Found !'
-        ], 'User Not Found !');
-    }*/
+            'reason' => 'Invalid Input'
+        ], 'Invalid Input');
+    }
 }
