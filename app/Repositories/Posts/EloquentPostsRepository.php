@@ -9,6 +9,7 @@
 use App\Models\Posts\Posts;
 use App\Repositories\DbRepository;
 use App\Exceptions\GeneralException;
+use App\Models\Access\User\User;
 
 class EloquentPostsRepository extends DbRepository
 {
@@ -273,13 +274,37 @@ class EloquentPostsRepository extends DbRepository
      * @param string $sort
      * @return mixed
      */
-    public function filterAll($condition = array(), $search, $orderBy = 'id', $sort = 'asc')
+    public function filterAll1($condition = array(), $search, $orderBy = 'id', $sort = 'asc')
     {
         if(isset($condition))
         {
             return $this->model
                 ->where('description', 'LIKE', '%' . $search . '%')
                 ->where($condition)->with(['user', 'tag_user'])->orderBy($orderBy, $sort)->get();
+        }
+
+        return $this->model->where('description', 'LIKE', '%' . $search . '%')->with(['user', 'tag_user'])->orderBy($orderBy, $sort)->get();
+    }
+
+    /**
+     * Get All
+     *
+     * @param string $orderBy
+     * @param string $sort
+     * @return mixed
+     */
+    public function filterAll($condition = array(), $search, $orderBy = 'id', $sort = 'asc')
+    {
+        if(isset($condition))
+        {
+            $userIds = User::where('name','LIKE', '%' . $search . '%')
+                ->orWhere('name','LIKE', '%' . $search . '%')
+                ->pluck('id')->toArray();
+
+            return $this->model
+                ->whereIn('id', $userIds)
+                ->with(['user', 'tag_user'])
+                ->orderBy($orderBy, $sort)->get();
         }
 
         return $this->model->where('description', 'LIKE', '%' . $search . '%')->with(['user', 'tag_user'])->orderBy($orderBy, $sort)->get();
