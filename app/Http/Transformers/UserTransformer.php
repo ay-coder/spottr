@@ -27,19 +27,17 @@ class UserTransformer extends Transformer
         ];
     }
     
-    public function userInfo($data, $connections = null)
+    public function userInfo($data)
     {
         $data = (object) $data;
         $postCount         = isset($data->posts) ? count($data->posts) : 0;
         $notificationCount = isset($data->notifications) ? count($data->notifications) : 0;
-        if(isset($connections))
-        {
-            $connectionCount = count($connections);
-        }
-        else
-        {
-            $connectionCount   = isset($data->connections) ? count($data->connections) : 0;
-        }
+        $myConnections     = isset($data->my_connections) ? count($data->my_connections) : 0;
+
+        $accConnections     = isset($data->accepted_connections) ? count($data->accepted_connections) : 0;
+        
+        $connectionCount =  $myConnections + $accConnections;
+        
         return [
             'user_id'       => $data->id,
             'token'         => isset($data->token) ? $this->nulltoBlank($data->token) : '',

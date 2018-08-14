@@ -234,7 +234,7 @@ class UsersController extends BaseApiController
             $connectionModel    = new Connections;
 
             $user           = $userObj->with([
-                'posts', 'connections', 'user_notifications'
+                'posts', 'connections', 'user_notifications', 'my_connections', 'accepted_connections'
             ])->find($request->get('user_id'));
             $userInfo       = $this->getAuthenticatedUser();
             $sameUser       = 0;
@@ -269,7 +269,7 @@ class UsersController extends BaseApiController
 
                 $user = $user->toArray();
                 $user = array_merge($user, $data);
-                $responseData = $this->userTransformer->userInfo($user, $allConnections);
+                $responseData = $this->userTransformer->userInfo($user);
                 
                 return $this->successResponse($responseData);
             }

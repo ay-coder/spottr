@@ -59,6 +59,24 @@ trait UserRelationship
     /**
      * @return mixed
      */
+    public function my_connections()
+    {
+        return $this->hasMany(Connections::class, 'user_id')
+            ->where('is_accepted', 1);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function accepted_connections()
+    {
+        return $this->hasMany(Connections::class, 'other_user_id')
+            ->where('is_accepted', 1);
+    } 
+
+    /**
+     * @return mixed
+     */
     public function posts()
     {
         return $this->hasMany(Posts::class, 'user_id');
