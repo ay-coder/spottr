@@ -298,11 +298,14 @@ class EloquentPostsRepository extends DbRepository
         if(isset($condition))
         {
             $userIds = User::where('name','LIKE', '%' . $search . '%')
-                ->orWhere('name','LIKE', '%' . $search . '%')
+                ->orWhere('username','LIKE', '%' . $search . '%')
+                ->orWhere('email','LIKE', '%' . $search . '%')
+                ->orWhere('phone','LIKE', '%' . $search . '%')
                 ->pluck('id')->toArray();
 
             return $this->model
-                ->whereIn('id', $userIds)
+                ->whereIn('user_id', $userIds)
+                ->orWhereIn('tag_user_id', $userIds)
                 ->with(['user', 'tag_user'])
                 ->orderBy($orderBy, $sort)->get();
         }
