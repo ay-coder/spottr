@@ -10,6 +10,7 @@ use App\Models\Blocked\Blocked;
 use App\Library\Push\PushNotification;
 use App\Models\Notifications\Notifications;
 use App\Models\Posts\Posts;
+use App\Models\Access\User\User;
 
 class APICommentsController extends BaseApiController
 {
