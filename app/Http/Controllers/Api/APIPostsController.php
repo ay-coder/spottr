@@ -8,6 +8,8 @@ use App\Repositories\Posts\EloquentPostsRepository;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Access\User\User;
 use App\Models\ReadPost\ReadPost;
+use App\Library\Push\PushNotification;
+use App\Models\Notifications\Notifications;
 use Auth;
 
 class APIPostsController extends BaseApiController
@@ -158,6 +160,7 @@ class APIPostsController extends BaseApiController
 
         $input      = $request->all();
         $userInfo   = $this->getAuthenticatedUser();
+        $tagUser    = User::where('id', $request->get('tag_user_id'))->first();
         $input      = array_merge($input, [
             'is_image'  => 1, 
             'is_video'  => 0, 
@@ -189,6 +192,22 @@ class APIPostsController extends BaseApiController
 
         if($model)
         {
+            $text       = $userInfo->name . ' spotted ' . $tagUser->name;
+            $payload    = [
+                'mtitle'    => '',
+                'mdesc'     => $text
+            ];
+            
+            Notifications::create([
+                'user_id'       => $tagUser->id,
+                'description'   => $text
+            ]);
+
+            if(isset($tagUser->device_token))
+            {
+                PushNotification::iOS($payload, $tagUser->device_token);
+            }
+
             $responseData = $this->postsTransformer->transform($model);
 
             return $this->successResponse($responseData, 'Posts is Created Successfully');
