@@ -20,7 +20,8 @@ class NotificationsTransformer extends Transformer
             $item = (object)$item;
         }
 
-        $item->user = (object)$item->user;
+        $item->user     = (object)$item->user;
+        $item->to_user  = (object)$item->to_user;
 
         $dt     = Carbon::now();
         return [
