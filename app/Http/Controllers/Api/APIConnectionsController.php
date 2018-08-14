@@ -466,5 +466,33 @@ class APIConnectionsController extends BaseApiController
         ], 'Something went wrong !');
     }
 
-    
+    /**
+     * Search Global
+     * 
+     * @param Request $request
+     */
+    public function searchGlobal(Request $request)   
+    {
+        $userInfo               = $this->getAuthenticatedUser();
+        $connectionModel        = new Connections;
+        $myConnectionList       = $connectionModel->where('user_id', $userInfo->id)->pluck('other_user_id')->toArray();
+        $otherConnectionList    = $connectionModel->where('other_user_id', $userInfo->id)->pluck('requested_user_id')->toArray();
+        $userModel              = new User;   
+
+        $suggestions = $userModel->whereNotIn('id', $otherConnectionList)
+                      ->whereNotIn('id', $myConnectionList)
+                      ->where('id', '!=', $userInfo->id)
+                      ->get();
+        
+        if(isset($suggestions) && count($suggestions))
+        {
+            $itemsOutput = $this->connectionsTransformer->searchTranform($suggestions);
+
+            return $this->successResponse($itemsOutput);
+        }
+
+        return $this->setStatusCode(400)->failureResponse([
+            'message' => 'Unable to find Suggestion!'
+            ], 'No Suggestions Found !');       
+    }
 }
