@@ -7,6 +7,7 @@ use App\Models\System\Session;
 use App\Models\Access\User\SocialLogin;
 use App\Models\Connections\Connections;
 use App\Models\Posts\Posts;
+use App\Models\Notifications\Notifications;
 
 /**
  * Class UserRelationship.
@@ -61,5 +62,13 @@ trait UserRelationship
     public function posts()
     {
         return $this->hasMany(Posts::class, 'user_id');
+    } 
+
+    /**
+     * @return mixed
+     */
+    public function user_notifications()
+    {
+        return $this->hasMany(Notifications::class, 'user_id');
     }    
 }
