@@ -26,6 +26,7 @@ class NotificationsTransformer extends Transformer
         return [
             "notification_id"   => (int) $item->id,
             "user_id"           => (int) $item->user_id,
+            "other_user_id"     => (int) $item->to_user_id,
             "description"       => $item->description,
             "is_read"           => (int) $item->is_read,
             'name'              => $item->user->name,

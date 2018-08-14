@@ -24,7 +24,7 @@ class Notifications extends BaseModel
      *
      */
     protected $fillable = [
-        "id", "user_id", "description", "is_read", "created_at", "updated_at", 
+        "id", "user_id", "to_user_id", "description", "is_read", "created_at", "updated_at", 
     ];
 
     /**

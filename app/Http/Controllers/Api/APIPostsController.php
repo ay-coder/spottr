@@ -202,6 +202,7 @@ class APIPostsController extends BaseApiController
             
             Notifications::create([
                 'user_id'       => $tagUser->id,
+                'to_user_id'    => $userInfo->id,
                 'description'   => $text
             ]);
 
