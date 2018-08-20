@@ -109,8 +109,12 @@ class APIPostsController extends BaseApiController
         $order      = $request->get('order') ? $request->get('order') : 'DESC';
         //$condition  = ['tag_user_id' => $userInfo->id];
         $condition  = [];
-        $items      = $paginate ? $this->repository->model->with(['user', 'tag_user', 'views', 'comments'])->where($condition)->where('description', 'LIKE', '%' .$search. '%')
-        ->orWhere('data_posts.users.name', 'LIKE', '%'. $search .'%')->orderBy($orderBy, $order)->paginate($paginate)->items() : $this->repository->filterAll($condition, $search, $orderBy, $order);
+        $items      = $this->repository->model->with([
+            'user', 'tag_user', 'views', 'comments'
+        ])
+        ->where('description', 'LIKE', '%' .$search. '%')
+        ->orderBy($orderBy, $order)
+        ->get();
 
         if(isset($items) && count($items))
         {
