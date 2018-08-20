@@ -452,16 +452,16 @@ class APIConnectionsController extends BaseApiController
         }
 
         $connectionModel = new Connections;
-
+        $userInfo   = $this->getAuthenticatedUser();
         $connection = $connectionModel->where([
             'user_id'       => $request->get('user_id'),
             'other_user_id' => $userInfo->id
         ])
         ->orWhere([
             'user_id'       => $userInfo->id,
-            'other_user_id' => $request->get('user_id'),
+            'other_user_id' => $request->get('user_id')
         ])->first();
-        $userInfo   = $this->getAuthenticatedUser();
+        
 
         if(isset($connection) && isset($connection->id))
         {
