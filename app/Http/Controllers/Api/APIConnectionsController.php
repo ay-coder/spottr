@@ -463,7 +463,7 @@ class APIConnectionsController extends BaseApiController
         ])->first();
         $userInfo   = $this->getAuthenticatedUser();
 
-        if(isset($connection) && $connection->other_user_id == $userInfo->id)
+        if(isset($connection) && isset($connection->id))
         {
             $connection->delete();   
             
