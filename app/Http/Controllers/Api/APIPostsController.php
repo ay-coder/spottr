@@ -10,6 +10,7 @@ use App\Models\Access\User\User;
 use App\Models\ReadPost\ReadPost;
 use App\Library\Push\PushNotification;
 use App\Models\Notifications\Notifications;
+use App\Models\Connections\Connections;
 use Auth;
 
 class APIPostsController extends BaseApiController
@@ -59,9 +60,25 @@ class APIPostsController extends BaseApiController
         $order      = $request->get('order') ? $request->get('order') : 'DESC';
         $condition  = ['tag_user_id' => $userInfo->id];
 
+
+        $connectionModel        = new Connections;
+        $myConnectionList       = $connectionModel->where('is_accepted', 1)->where('user_id', $userInfo->id)
+        ->pluck('other_user_id')
+        ->toArray();
+
+        $otherConnectionList    = $connectionModel->where('is_accepted', 1)
+        ->where('other_user_id', $userInfo->id)
+        ->pluck('requested_user_id')
+        ->toArray();
+            
+        $allConnections = array_merge($myConnectionList, $otherConnectionList);
+        $connectionIds  = array_unique($allConnections);
+        
         $items      = $this->repository->model->with([
             'user', 'tag_user', 'views', 'comments'
-        ])->where(['tag_user_id' => $userInfo->id])
+        ])
+        ->whereIn('tag_user_id', $connectionIds)
+        ->orWhereIn('user_id', $connectionIds)
         ->orderBy($orderBy, $order)
         ->get();
         
