@@ -115,6 +115,7 @@ class APIPostsController extends BaseApiController
      */
     public function my(Request $request)
     {
+        die('test');
         if($request->get('user_id'))
         {
             $userInfo = User::where('id', $request->get('user_id'))->first();
