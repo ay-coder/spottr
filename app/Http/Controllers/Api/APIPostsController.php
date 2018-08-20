@@ -58,8 +58,13 @@ class APIPostsController extends BaseApiController
         $orderBy    = $request->get('orderBy') ? $request->get('orderBy') : 'id';
         $order      = $request->get('order') ? $request->get('order') : 'DESC';
         $condition  = ['tag_user_id' => $userInfo->id];
-        $items      = $paginate ? $this->repository->model->with(['user', 'tag_user', 'views', 'comments'])->where($condition)->orderBy($orderBy, $order)->paginate($paginate)->items() : $this->repository->getAll($condition, $orderBy, $order);
 
+        $items      = $this->repository->model->with([
+            'user', 'tag_user', 'views', 'comments'
+        ])->where(['tag_user_id' => $userInfo->id])
+        ->orderBy($orderBy, $order)
+        ->get();
+        
         if(isset($items) && count($items))
         {
             $itemsOutput = $this->postsTransformer->getUserPosts($userInfo, $items);

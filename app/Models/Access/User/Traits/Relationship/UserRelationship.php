@@ -80,6 +80,14 @@ trait UserRelationship
     public function posts()
     {
         return $this->hasMany(Posts::class, 'user_id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function tag_posts()
+    {
+        return $this->hasMany(Posts::class, 'tag_user_id');
     } 
 
     /**

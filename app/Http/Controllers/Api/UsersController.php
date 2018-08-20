@@ -234,7 +234,7 @@ class UsersController extends BaseApiController
             $connectionModel    = new Connections;
 
             $user           = $userObj->with([
-                'posts', 'connections', 'user_notifications', 'my_connections', 'accepted_connections'
+                'tag_posts', 'connections', 'user_notifications', 'my_connections', 'accepted_connections'
             ])->find($request->get('user_id'));
             $userInfo       = $this->getAuthenticatedUser();
             $sameUser       = 0;
