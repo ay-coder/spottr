@@ -330,4 +330,108 @@ class APIPostsController extends BaseApiController
             'reason' => 'Invalid Inputs'
         ], 'Something went wrong !');
     }
+
+
+    /**
+     * List of All Posts Requests
+     *
+     * @param Request $request
+     * @return json
+     */
+    public function list(Request $request)
+    {
+        $userInfo   = $this->getAuthenticatedUser();
+        $condition  = ['tag_user_id' => $userInfo->id];
+        $orderBy    = $request->get('orderBy') ? $request->get('orderBy') : 'id';
+        $order      = $request->get('order') ? $request->get('order') : 'DESC';
+        $items      = $this->repository->model->with([
+            'user', 'tag_user', 'views', 'comments'
+        ])
+        ->where($condition)
+        ->where('is_accepted', 0)
+        ->orderBy($orderBy, $order)
+        ->get();
+
+        if(isset($items) && count($items))
+        {
+            $itemsOutput = $this->postsTransformer->getMyPosts($userInfo, $items);
+
+            return $this->successResponse($itemsOutput);
+        }
+
+        return $this->setStatusCode(400)->failureResponse([
+            'message' => 'Unable to find Post Request!'
+            ], 'No Posts Request Found !');
+    } 
+
+    /**
+     * Accept Post Requests
+     *
+     * @param Request $request
+     * @return json
+     */
+    public function accept(Request $request)
+    {
+        if($request->has('post_id'))
+        {
+            $userInfo   = $this->getAuthenticatedUser();
+            $model      = $this->repository->model->where([
+                'id'          => $request->get('post_id'),
+                'tag_user_id' => $userInfo->id,
+                'is_accepted' => 0
+            ])->first();
+
+            if(isset($model->id))
+            {
+                $model->is_accepted = 1;
+                if($model->save())
+                {
+                    $message = [
+                        'message' => 'Post Request accepted !'
+                    ];
+
+                    return $this->successResponse($message);
+                }
+            }
+        }
+           
+        return $this->setStatusCode(400)->failureResponse([
+            'message' => 'Unable to find Post Request!'
+            ], 'No Posts Request Found !');
+    } 
+
+    /**
+     * Accept Post Requests
+     *
+     * @param Request $request
+     * @return json
+     */
+    public function reject(Request $request)
+    {
+        if($request->has('post_id'))
+        {
+            $userInfo   = $this->getAuthenticatedUser();
+            $model      = $this->repository->model->where([
+                'id'          => $request->get('post_id'),
+                'tag_user_id' => $userInfo->id,
+                'is_accepted' => 0
+            ])->first();
+
+            if(isset($model->id))
+            {
+                if($model->delete())
+                {
+                    $message = [
+                        'message' => 'Post Request Deleted !'
+                    ];
+
+                    return $this->successResponse($message);
+                }
+            }
+        }
+           
+        return $this->setStatusCode(400)->failureResponse([
+            'message' => 'Unable to find Post Request!'
+            ], 'No Posts Request Found !');
+    }   
 }

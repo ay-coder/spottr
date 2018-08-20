@@ -234,7 +234,7 @@ class UsersController extends BaseApiController
             $connectionModel    = new Connections;
 
             $user           = $userObj->with([
-                'tag_posts', 'connections', 'user_notifications', 'my_connections', 'accepted_connections'
+                'posts', 'connections', 'user_notifications', 'my_connections', 'accepted_connections'
             ])->find($request->get('user_id'));
             $userInfo       = $this->getAuthenticatedUser();
             $sameUser       = 0;
@@ -470,13 +470,24 @@ class UsersController extends BaseApiController
     {
         if($request->has('username'))
         {
-            $user = User::where('username', $request->get('username'))->first();
+            $phone = $request->has('phone') ? $request->get('phone') : false;
+
+            if($phone)
+            {
+                $user = User::where('username', $request->get('username'))
+                    ->orWhere('phone', $phone)
+                    ->first();
+            }
+            else
+            {
+                $user = User::where('username', $request->get('username'))->first();
+            }
 
             if(isset($user) && isset($user->id))
             {
                 return $this->setStatusCode(400)->failureResponse([
-                    'reason' => 'User exist with Username!'
-                ], 'User exist with Username');
+                    'reason' => 'User exist with Username or Phone Number!'
+                ], 'User exist with Username or Phone Number');
             }
             else
             {

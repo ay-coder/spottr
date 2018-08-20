@@ -79,7 +79,7 @@ trait UserRelationship
      */
     public function posts()
     {
-        return $this->hasMany(Posts::class, 'user_id');
+        return $this->hasMany(Posts::class, 'user_id')->where('is_accepted', 1);
     }
 
     /**
