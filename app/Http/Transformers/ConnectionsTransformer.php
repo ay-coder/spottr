@@ -35,6 +35,7 @@ class ConnectionsTransformer extends Transformer
                 $response[] = [
                     'request_id'        => (int) $item->id,
                     'requested_user_id' => (int) $item->user->id,
+                    'user_id'           => $item->user->id,
                     'name'              => $item->user->name,
                     'email'             => $item->user->email,
                     'phone'             => $item->user->phone,
