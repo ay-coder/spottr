@@ -115,7 +115,6 @@ class APIPostsController extends BaseApiController
      */
     public function my(Request $request)
     {
-        die('test');
         if($request->get('user_id'))
         {
             $userInfo = User::where('id', $request->get('user_id'))->first();
@@ -127,7 +126,7 @@ class APIPostsController extends BaseApiController
         $paginate   = $request->get('paginate') ? $request->get('paginate') : false;
         $orderBy    = $request->get('orderBy') ? $request->get('orderBy') : 'id';
         $order      = $request->get('order') ? $request->get('order') : 'DESC';
-        $condition  = ['user_id' => $userInfo->id];
+        $condition  = ['tag_user_id' => $userInfo->id];
         $items      = $paginate ? $this->repository->model->with(['user', 'tag_user', 'views', 'comments'])->where($condition)->orderBy($orderBy, $order)->paginate($paginate)->items() : $this->repository->getAll($condition, $orderBy, $order);
 
         if(isset($items) && count($items))
