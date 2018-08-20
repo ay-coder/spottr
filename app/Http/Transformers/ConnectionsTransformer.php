@@ -91,4 +91,29 @@ class ConnectionsTransformer extends Transformer
 
         return $response;
     }
+
+    public function searchUserTranform($items, $myConnectionList)
+    {
+        $response = [];
+
+        if(isset($items) && count($items))
+        {
+            foreach($items as $data)
+            {
+                $isConnected    = in_array($data->id, $myConnectionList) ? 1 : 0;
+                $response[]     = [
+                    'user_id'       => (int) $data->id,
+                    'name'          => $this->nulltoBlank($data->name),
+                    'email'         => $this->nulltoBlank($data->email),
+                    'phone'         => $this->nulltoBlank($data->phone),
+                    'is_connected'  => $isConnected,
+                    'profile_pic'   => isset($data->profile_pic) ? URL::to('/').'/uploads/user/' . $data->profile_pic : '',
+                    'dob'           => $this->nulltoBlank($data->dob),
+                    'gender'        => $this->nulltoBlank($data->gender)
+                ];
+            }
+        }
+
+        return $response;
+    }
 }

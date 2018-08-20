@@ -65,6 +65,16 @@ trait UserRelationship
             ->where('is_accepted', 1);
     }
 
+
+    /**
+     * @return mixed
+     */
+    public function my_connection_requests()
+    {
+        return $this->hasMany(Connections::class, 'user_id')
+            ->where('is_accepted', 0);
+    }
+
     /**
      * @return mixed
      */

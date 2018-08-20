@@ -119,27 +119,23 @@ class APIConnectionsController extends BaseApiController
         $otherConnectionList    = $connectionModel->where('other_user_id', $userInfo->id)->pluck('requested_user_id')->toArray();
         $userModel              = new User;   
 
-        if($request->get('search'))
+        
+        if($request->get('keyword'))
         {
             $suggestions = $userModel->whereNotIn('id', $otherConnectionList)
                       ->whereNotIn('id', $myConnectionList)
                       ->where('id', '!=', $userInfo->id)
-                      ->where('name', 'LIKE', '%'. $request->get('search') .'%')
-                      ->orwhere('email', 'LIKE', '%'. $request->get('search') .'%')
+                      ->where('name', 'LIKE', '%'. $request->get('keyword') .'%')
+                      ->orwhere('email', 'LIKE', '%'. $request->get('keyword') .'%')
                       ->get();
-        }
-        else
-        {
+            if(isset($suggestions) && count($suggestions))
+            {
+                $itemsOutput = $this->connectionsTransformer->searchUserTranform($suggestions, $myConnectionList);
 
-        $suggestions = $userModel->whereNotIn('id', $otherConnectionList)->whereNotIn('id', $myConnectionList)->where('id', '!=', $userInfo->id)->get();
+                return $this->successResponse($itemsOutput);
+            }
         }
-
-        if(isset($suggestions) && count($suggestions))
-        {
-            $itemsOutput = $this->connectionsTransformer->searchTranform($suggestions);
-
-            return $this->successResponse($itemsOutput);
-        }
+        
 
         return $this->setStatusCode(400)->failureResponse([
             'message' => 'Unable to find Connections!'

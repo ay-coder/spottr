@@ -8,6 +8,7 @@
 
 use App\Models\Connections\Connections;
 use App\Repositories\DbRepository;
+use App\Models\Access\User\User;
 use App\Exceptions\GeneralException;
 
 class EloquentConnectionsRepository extends DbRepository
@@ -32,15 +33,11 @@ class EloquentConnectionsRepository extends DbRepository
      * @var array
      */
     public $tableHeaders = [
-        'id'        => 'Id',
-'user_id'        => 'User_id',
-'other_user_id'        => 'Other_user_id',
-'requested_user_id'        => 'Requested_user_id',
-'is_accepted'        => 'Is_accepted',
-'is_read'        => 'Is_read',
-'created_at'        => 'Created_at',
-'updated_at'        => 'Updated_at',
-"actions"         => "Actions"
+        'username'            => 'Name',
+        'connection_count'    => 'Connection Count',
+        'request_count'       => 'Request Count',
+        'posts'                 => 'Posts',
+        "actions"             => "Actions"
     ];
 
     /**
@@ -49,55 +46,31 @@ class EloquentConnectionsRepository extends DbRepository
      * @var array
      */
     public $tableColumns = [
-        'id' =>   [
-                'data'          => 'id',
-                'name'          => 'id',
+        'username' =>   [
+                'data'          => 'username',
+                'name'          => 'username',
                 'searchable'    => true,
                 'sortable'      => true
             ],
-		'user_id' =>   [
-                'data'          => 'user_id',
-                'name'          => 'user_id',
+		'connection_count' =>   [
+                'data'          => 'connection_count',
+                'name'          => 'connection_count',
                 'searchable'    => true,
                 'sortable'      => true
             ],
-		'other_user_id' =>   [
-                'data'          => 'other_user_id',
-                'name'          => 'other_user_id',
+		'request_count' =>   [
+                'data'          => 'request_count',
+                'name'          => 'request_count',
                 'searchable'    => true,
                 'sortable'      => true
             ],
-		'requested_user_id' =>   [
-                'data'          => 'requested_user_id',
-                'name'          => 'requested_user_id',
+		'posts' =>   [
+                'data'          => 'posts',
+                'name'          => 'posts',
                 'searchable'    => true,
                 'sortable'      => true
             ],
-		'is_accepted' =>   [
-                'data'          => 'is_accepted',
-                'name'          => 'is_accepted',
-                'searchable'    => true,
-                'sortable'      => true
-            ],
-		'is_read' =>   [
-                'data'          => 'is_read',
-                'name'          => 'is_read',
-                'searchable'    => true,
-                'sortable'      => true
-            ],
-		'created_at' =>   [
-                'data'          => 'created_at',
-                'name'          => 'created_at',
-                'searchable'    => true,
-                'sortable'      => true
-            ],
-		'updated_at' =>   [
-                'data'          => 'updated_at',
-                'name'          => 'updated_at',
-                'searchable'    => true,
-                'sortable'      => true
-            ],
-		'actions' => [
+	   'actions' => [
             'data'          => 'actions',
             'name'          => 'actions',
             'searchable'    => false,
@@ -174,6 +147,7 @@ class EloquentConnectionsRepository extends DbRepository
     public function __construct()
     {
         $this->model = new Connections;
+        $this->userModel    = new User;
     }
 
     /**
@@ -271,7 +245,9 @@ class EloquentConnectionsRepository extends DbRepository
     public function getTableFields()
     {
         return [
-            $this->model->getTable().'.*'
+            $this->model->getTable().'.*',
+            $this->userModel->getTable().'.name as username',
+
         ];
     }
 
@@ -280,7 +256,9 @@ class EloquentConnectionsRepository extends DbRepository
      */
     public function getForDataTable()
     {
-        return $this->model->select($this->getTableFields())->get();
+        return  $this->model->select($this->getTableFields())
+                ->leftjoin($this->userModel->getTable(), $this->userModel->getTable().'.id', '=', $this->model->getTable().'.user_id')->get();
+
     }
 
     /**
