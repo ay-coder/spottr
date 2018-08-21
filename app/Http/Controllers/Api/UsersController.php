@@ -113,6 +113,7 @@ class UsersController extends BaseApiController
     {
         $successResponse = [
             'support_number'        => '110001010',
+            'rateus_url'            => route('frontend.privacy-policy'),
             'privacy_policy_url'    => route('frontend.privacy-policy'),
             'about_us_url'          => route('frontend.about-us'),
             'terms_conditions_url'  => route('frontend.terms-conditions'),
