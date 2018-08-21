@@ -147,6 +147,18 @@ class AdminConnectionsController extends Controller
     {
         return Datatables::of($this->repository->getForDataTable())
             ->escapeColumns(['id', 'sort'])
+            ->addColumn('username', function ($item) {
+                return $item->user->name;
+            })
+            ->addColumn('connection_count', function ($item) {
+                return count($item->user->my_connections);
+            })
+            ->addColumn('request_count', function ($item) {
+                return count($item->user->my_connection_requests);
+            })
+            ->addColumn('posts', function ($item) {
+                return count($item->user->posts);
+            })
             ->addColumn('actions', function ($item) {
                 return $item->admin_action_buttons;
             })

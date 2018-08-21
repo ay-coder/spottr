@@ -146,7 +146,24 @@ class AdminPostsController extends Controller
     public function getTableData()
     {
         return Datatables::of($this->repository->getForDataTable())
-            ->escapeColumns(['id', 'sort'])
+            ->addColumn('username', function ($item) {
+                return $item->user->name;
+            })
+            ->addColumn('tag_username', function ($item) {
+                return $item->tag_user->name;
+            })
+            ->addColumn('media', function ($item) {
+                return $item->media;
+            })
+            ->addColumn('description', function ($item) {
+                return $item->description;
+            })
+            ->addColumn('is_image', function ($item) {
+                return $item->is_image;
+            })
+            ->addColumn('is_video', function ($item) {
+                return $item->is_video;
+            })
             ->addColumn('actions', function ($item) {
                 return $item->admin_action_buttons;
             })

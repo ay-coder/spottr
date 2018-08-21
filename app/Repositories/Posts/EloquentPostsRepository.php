@@ -9,6 +9,7 @@
 use App\Models\Posts\Posts;
 use App\Repositories\DbRepository;
 use App\Exceptions\GeneralException;
+use App\Models\Access\User\User;
 
 class EloquentPostsRepository extends DbRepository
 {
@@ -32,17 +33,13 @@ class EloquentPostsRepository extends DbRepository
      * @var array
      */
     public $tableHeaders = [
-        'id'        => 'Id',
-'user_id'        => 'User_id',
-'tag_user_id'        => 'Tag_user_id',
-'media'        => 'Media',
-'description'        => 'Description',
-'is_image'        => 'Is_image',
-'is_video'        => 'Is_video',
-'status'        => 'Status',
-'created_at'        => 'Created_at',
-'updated_at'        => 'Updated_at',
-"actions"         => "Actions"
+        'username'          => 'Creator',
+        'tag_username'      => 'Tagged User',
+        'media'             => 'Media',
+        'description'       => 'Description',
+        'is_image'          => 'Image',
+        'is_video'          => 'Video',
+        "actions"         => "Actions"
     ];
 
     /**
@@ -51,24 +48,19 @@ class EloquentPostsRepository extends DbRepository
      * @var array
      */
     public $tableColumns = [
-        'id' =>   [
-                'data'          => 'id',
-                'name'          => 'id',
+        'username' =>   [
+                'data'          => 'username',
+                'name'          => 'username',
                 'searchable'    => true,
                 'sortable'      => true
             ],
-		'user_id' =>   [
-                'data'          => 'user_id',
-                'name'          => 'user_id',
+		'tag_username' =>   [
+                'data'          => 'tag_username',
+                'name'          => 'tag_username',
                 'searchable'    => true,
                 'sortable'      => true
             ],
-		'tag_user_id' =>   [
-                'data'          => 'tag_user_id',
-                'name'          => 'tag_user_id',
-                'searchable'    => true,
-                'sortable'      => true
-            ],
+		
 		'media' =>   [
                 'data'          => 'media',
                 'name'          => 'media',
@@ -93,25 +85,7 @@ class EloquentPostsRepository extends DbRepository
                 'searchable'    => true,
                 'sortable'      => true
             ],
-		'status' =>   [
-                'data'          => 'status',
-                'name'          => 'status',
-                'searchable'    => true,
-                'sortable'      => true
-            ],
-		'created_at' =>   [
-                'data'          => 'created_at',
-                'name'          => 'created_at',
-                'searchable'    => true,
-                'sortable'      => true
-            ],
-		'updated_at' =>   [
-                'data'          => 'updated_at',
-                'name'          => 'updated_at',
-                'searchable'    => true,
-                'sortable'      => true
-            ],
-		'actions' => [
+	    'actions' => [
             'data'          => 'actions',
             'name'          => 'actions',
             'searchable'    => false,
@@ -273,13 +247,40 @@ class EloquentPostsRepository extends DbRepository
      * @param string $sort
      * @return mixed
      */
-    public function filterAll($condition = array(), $search, $orderBy = 'id', $sort = 'asc')
+    public function filterAll1($condition = array(), $search, $orderBy = 'id', $sort = 'asc')
     {
         if(isset($condition))
         {
             return $this->model
                 ->where('description', 'LIKE', '%' . $search . '%')
                 ->where($condition)->with(['user', 'tag_user'])->orderBy($orderBy, $sort)->get();
+        }
+
+        return $this->model->where('description', 'LIKE', '%' . $search . '%')->with(['user', 'tag_user'])->orderBy($orderBy, $sort)->get();
+    }
+
+    /**
+     * Get All
+     *
+     * @param string $orderBy
+     * @param string $sort
+     * @return mixed
+     */
+    public function filterAll($condition = array(), $search, $orderBy = 'id', $sort = 'asc')
+    {
+        if(isset($condition))
+        {
+            $userIds = User::where('name','LIKE', '%' . $search . '%')
+                ->orWhere('username','LIKE', '%' . $search . '%')
+                ->orWhere('email','LIKE', '%' . $search . '%')
+                ->orWhere('phone','LIKE', '%' . $search . '%')
+                ->pluck('id')->toArray();
+
+            return $this->model
+                ->whereIn('user_id', $userIds)
+                ->orWhereIn('tag_user_id', $userIds)
+                ->with(['user', 'tag_user'])
+                ->orderBy($orderBy, $sort)->get();
         }
 
         return $this->model->where('description', 'LIKE', '%' . $search . '%')->with(['user', 'tag_user'])->orderBy($orderBy, $sort)->get();

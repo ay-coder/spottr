@@ -35,6 +35,7 @@ class ConnectionsTransformer extends Transformer
                 $response[] = [
                     'request_id'        => (int) $item->id,
                     'requested_user_id' => (int) $item->user->id,
+                    'user_id'           => $item->user->id,
                     'name'              => $item->user->name,
                     'email'             => $item->user->email,
                     'phone'             => $item->user->phone,
@@ -82,6 +83,31 @@ class ConnectionsTransformer extends Transformer
                     'name'          => $this->nulltoBlank($data->name),
                     'email'         => $this->nulltoBlank($data->email),
                     'phone'         => $this->nulltoBlank($data->phone),
+                    'profile_pic'   => isset($data->profile_pic) ? URL::to('/').'/uploads/user/' . $data->profile_pic : '',
+                    'dob'           => $this->nulltoBlank($data->dob),
+                    'gender'        => $this->nulltoBlank($data->gender)
+                ];
+            }
+        }
+
+        return $response;
+    }
+
+    public function searchUserTranform($items, $myConnectionList)
+    {
+        $response = [];
+
+        if(isset($items) && count($items))
+        {
+            foreach($items as $data)
+            {
+                $isConnected    = in_array($data->id, $myConnectionList) ? 1 : 0;
+                $response[]     = [
+                    'user_id'       => (int) $data->id,
+                    'name'          => $this->nulltoBlank($data->name),
+                    'email'         => $this->nulltoBlank($data->email),
+                    'phone'         => $this->nulltoBlank($data->phone),
+                    'is_connected'  => $isConnected,
                     'profile_pic'   => isset($data->profile_pic) ? URL::to('/').'/uploads/user/' . $data->profile_pic : '',
                     'dob'           => $this->nulltoBlank($data->dob),
                     'gender'        => $this->nulltoBlank($data->gender)

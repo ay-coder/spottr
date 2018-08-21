@@ -119,27 +119,23 @@ class APIConnectionsController extends BaseApiController
         $otherConnectionList    = $connectionModel->where('other_user_id', $userInfo->id)->pluck('requested_user_id')->toArray();
         $userModel              = new User;   
 
-        if($request->get('search'))
+
+        if($request->get('keyword'))
         {
             $suggestions = $userModel->whereNotIn('id', $otherConnectionList)
                       ->whereNotIn('id', $myConnectionList)
                       ->where('id', '!=', $userInfo->id)
-                      ->where('name', 'LIKE', '%'. $request->get('search') .'%')
-                      ->orwhere('email', 'LIKE', '%'. $request->get('search') .'%')
+                      ->where('name', 'LIKE', '%'. $request->get('keyword') .'%')
+                      ->orwhere('email', 'LIKE', '%'. $request->get('keyword') .'%')
                       ->get();
-        }
-        else
-        {
+            if(isset($suggestions) && count($suggestions))
+            {
+                $itemsOutput = $this->connectionsTransformer->searchUserTranform($suggestions, $myConnectionList);
 
-        $suggestions = $userModel->whereNotIn('id', $otherConnectionList)->whereNotIn('id', $myConnectionList)->where('id', '!=', $userInfo->id)->get();
+                return $this->successResponse($itemsOutput);
+            }
         }
-
-        if(isset($suggestions) && count($suggestions))
-        {
-            $itemsOutput = $this->connectionsTransformer->searchTranform($suggestions);
-
-            return $this->successResponse($itemsOutput);
-        }
+        
 
         return $this->setStatusCode(400)->failureResponse([
             'message' => 'Unable to find Connections!'
@@ -398,7 +394,7 @@ class APIConnectionsController extends BaseApiController
     public function acceptRequests(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'request_id'   => 'required'
+            'user_id'   => 'required'
         ]);
 
         if($validator->fails()) 
@@ -415,8 +411,15 @@ class APIConnectionsController extends BaseApiController
 
         $connectionModel = new Connections;
 
-        $connection = $connectionModel->find($request->get('request_id'));
         $userInfo   = $this->getAuthenticatedUser();
+        $connection = $connectionModel->where([
+            'user_id'       => $request->get('user_id'),
+            'other_user_id' => $userInfo->id
+        ])
+        ->orWhere([
+            'user_id'       => $userInfo->id,
+            'other_user_id' => $request->get('user_id'),
+        ])->first();
 
         if(isset($connection) && $connection->other_user_id == $userInfo->id && $connection->is_accepted == 0)
         {
@@ -434,7 +437,7 @@ class APIConnectionsController extends BaseApiController
     public function rejectRequests(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'request_id'   => 'required'
+            'user_id'   => 'required'
         ]);
 
         if($validator->fails()) 
@@ -448,13 +451,19 @@ class APIConnectionsController extends BaseApiController
             return $this->failureResponse($validator->messages(), $messageData);
         }
 
-
         $connectionModel = new Connections;
-
-        $connection = $connectionModel->find($request->get('request_id'));
         $userInfo   = $this->getAuthenticatedUser();
+        $connection = $connectionModel->where([
+            'user_id'       => $request->get('user_id'),
+            'other_user_id' => $userInfo->id
+        ])
+        ->orWhere([
+            'user_id'       => $userInfo->id,
+            'other_user_id' => $request->get('user_id')
+        ])->first();
+        
 
-        if(isset($connection) && $connection->other_user_id == $userInfo->id)
+        if(isset($connection) && isset($connection->id))
         {
             $connection->delete();   
             
@@ -466,5 +475,33 @@ class APIConnectionsController extends BaseApiController
         ], 'Something went wrong !');
     }
 
-    
+    /**
+     * Search Global
+     * 
+     * @param Request $request
+     */
+    public function searchGlobal(Request $request)   
+    {
+        $userInfo               = $this->getAuthenticatedUser();
+        $connectionModel        = new Connections;
+        $myConnectionList       = $connectionModel->where('user_id', $userInfo->id)->pluck('other_user_id')->toArray();
+        $otherConnectionList    = $connectionModel->where('other_user_id', $userInfo->id)->pluck('requested_user_id')->toArray();
+        $userModel              = new User;   
+
+        $suggestions = $userModel->whereNotIn('id', $otherConnectionList)
+                      ->whereNotIn('id', $myConnectionList)
+                      ->where('id', '!=', $userInfo->id)
+                      ->get();
+        
+        if(isset($suggestions) && count($suggestions))
+        {
+            $itemsOutput = $this->connectionsTransformer->searchTranform($suggestions);
+
+            return $this->successResponse($itemsOutput);
+        }
+
+        return $this->setStatusCode(400)->failureResponse([
+            'message' => 'Unable to find Suggestion!'
+            ], 'No Suggestions Found !');       
+    }
 }

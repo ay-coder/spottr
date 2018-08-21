@@ -113,7 +113,9 @@ class UsersController extends BaseApiController
     {
         $successResponse = [
             'support_number'        => '110001010',
-            'privacy_policy_url'    => 'https://www.google.co.in/'
+            'privacy_policy_url'    => route('frontend.privacy-policy'),
+            'about_us_url'          => route('frontend.about-us'),
+            'terms_conditions_url'  => route('frontend.terms-conditions'),
         ];
 
         return $this->successResponse($successResponse);
@@ -233,7 +235,9 @@ class UsersController extends BaseApiController
             $userObj            = new User;
             $connectionModel    = new Connections;
 
-            $user           = $userObj->find($request->get('user_id'));
+            $user           = $userObj->with([
+                'posts', 'connections', 'user_notifications', 'my_connections', 'accepted_connections'
+            ])->find($request->get('user_id'));
             $userInfo       = $this->getAuthenticatedUser();
             $sameUser       = 0;
             $connections    = [];
@@ -250,7 +254,6 @@ class UsersController extends BaseApiController
                 $myConnectionList       = $connectionModel->where('is_accepted', 1)->where('user_id', $user->id)->pluck('other_user_id')->toArray();
                 $otherConnectionList    = $connectionModel->where('is_accepted', 1)->where('other_user_id', $user->id)->pluck('requested_user_id')->toArray();
                 $allConnections = array_merge($myConnectionList, $otherConnectionList);
-
                 if(in_array($userInfo->id, $allConnections))
                 {
                     $isConnected        = 1;
@@ -459,29 +462,48 @@ class UsersController extends BaseApiController
         ], 'Something went wrong !');     
     }
 
+
     /**
-     * Logout request
+     * Validate User
      * @param  Request $request
      * @return json
      */
-    /*public function logout(Request $request) 
+    public function validateUser(Request $request) 
     {
-        $userInfo   = $this->getApiUserInfo();
-        $user       = User::find($userInfo['userId']);
-
-        $user->device_token = '';
-
-        if($user->save()) 
+        if($request->has('username'))
         {
-            $successResponse = [
-                'message' => 'User Logged out successfully.'
-            ];
+            $phone = $request->has('phone') ? $request->get('phone') : false;
 
-            return $this->successResponse($successResponse);
+            if($phone)
+            {
+                $user = User::where('username', $request->get('username'))
+                    ->orWhere('phone', $phone)
+                    ->first();
+            }
+            else
+            {
+                $user = User::where('username', $request->get('username'))->first();
+            }
+
+            if(isset($user) && isset($user->id))
+            {
+                return $this->setStatusCode(400)->failureResponse([
+                    'reason' => 'User exist with Username or Phone Number!'
+                ], 'User exist with Username or Phone Number');
+            }
+            else
+            {
+                $successResponse = [
+                    'message' => 'No User found ! Continue for Signup.'
+                ];
+
+                return $this->successResponse($successResponse);
+            }
+
         }
 
         return $this->setStatusCode(400)->failureResponse([
-            'reason' => 'User Not Found !'
-        ], 'User Not Found !');
-    }*/
+            'reason' => 'Invalid Input'
+        ], 'Invalid Input');
+    }
 }

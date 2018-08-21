@@ -2,8 +2,12 @@
 Route::group(['namespace' => 'Api'], function()
 {
     Route::get('connections', 'APIConnectionsController@index')->name('connections.index');
+
+    Route::post('connections/search-global', 'APIConnectionsController@searchGlobal')->name('connections.search-global');
+
     Route::post('my-connections', 'APIConnectionsController@myConnections')->name('connections.my-connections');
-    Route::get('connections-search', 'APIConnectionsController@search')->name('connections.search');
+    
+    Route::post('connections-search', 'APIConnectionsController@search')->name('connections.search');
     Route::post('connections/create', 'APIConnectionsController@create')->name('connections.create');
     Route::get('connections/show-requests', 'APIConnectionsController@showRequests')->name('connections.show-requests');
 

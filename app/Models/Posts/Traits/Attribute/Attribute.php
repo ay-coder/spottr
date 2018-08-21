@@ -51,7 +51,7 @@ trait Attribute
     {
         $repository = new EloquentPostsRepository;
         $routes     = $repository->getModuleRoutes();
-
+        return '<p>this istest</p>';
         return $this->getEditButtonAttribute($routes, $repository->adminRoutePrefix, true) . $this->getDeleteButtonAttribute($routes, $repository->adminRoutePrefix);
     }
 }

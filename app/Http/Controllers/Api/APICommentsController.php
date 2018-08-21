@@ -7,6 +7,10 @@ use App\Http\Controllers\Api\BaseApiController;
 use App\Repositories\Comments\EloquentCommentsRepository;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Blocked\Blocked;
+use App\Library\Push\PushNotification;
+use App\Models\Notifications\Notifications;
+use App\Models\Posts\Posts;
+use App\Models\Access\User\User;
 
 class APICommentsController extends BaseApiController
 {
@@ -91,11 +95,30 @@ class APICommentsController extends BaseApiController
         }
 
         $userInfo   = $this->getAuthenticatedUser();
+        $postInfo   = Posts::where('id', $request->get('post_id'))->first();
+        $tagUser    = User::where('id', $postInfo->tag_user_id)->first();
         $input      = array_merge($request->all(), ['user_id' => $userInfo->id]);
         $model      = $this->repository->create($input);
 
         if($model)
         {
+            $text       = $userInfo->name . ' commented on  ' . $postInfo->description;
+            $payload    = [
+                'mtitle'    => '',
+                'mdesc'     => $text
+            ];
+            
+            Notifications::create([
+                'user_id'       => $tagUser->id,
+                'to_user_id'    => $userInfo->id,
+                'description'   => $text
+            ]);
+
+            if(isset($tagUser->device_token))
+            {
+                PushNotification::iOS($payload, $tagUser->device_token);
+            }
+
             return $this->successResponse(['message' => 'Comment Created Successfully!'], 'Comments is Created Successfully');
         }
 

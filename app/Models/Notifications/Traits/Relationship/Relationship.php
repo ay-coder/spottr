@@ -13,4 +13,14 @@ trait Relationship
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    /**
+     * Belongs to relations with User.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function to_user()
+    {
+        return $this->belongsTo(User::class, 'to_user_id');
+    }
 }
