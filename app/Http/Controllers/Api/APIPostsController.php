@@ -77,6 +77,7 @@ class APIPostsController extends BaseApiController
         $items      = $this->repository->model->with([
             'user', 'tag_user', 'views', 'comments'
         ])
+        ->where('user_id', '!=', $userInfo->id)
         ->whereIn('tag_user_id', $connectionIds)
         ->orWhereIn('user_id', $connectionIds)
         ->orderBy($orderBy, $order)
