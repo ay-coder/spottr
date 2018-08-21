@@ -5,6 +5,9 @@
  * All route names are prefixed with 'frontend.'.
  */
 Route::get('/', 'FrontendController@index')->name('index');
+Route::get('/about-us', 'FrontendController@aboutUs')->name('about-us');
+Route::get('/privacy-policy', 'FrontendController@privacyPolicy')->name('privacy-policy');
+Route::get('/terms-conditions', 'FrontendController@termsConditions')->name('terms-conditions');
 Route::get('macros', 'FrontendController@macros')->name('macros');
 
 /*

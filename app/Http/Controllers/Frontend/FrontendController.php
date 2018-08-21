@@ -17,6 +17,21 @@ class FrontendController extends Controller
         return view('frontend.index');
     }
 
+    public function aboutUs()
+    {
+        return view('frontend.about-us');   
+    }
+
+    public function privacyPolicy()
+    {
+        return view('frontend.privacy-policy');   
+    }
+
+    public function termsConditions()
+    {
+        return view('frontend.terms-conditions');   
+    }
+
     /**
      * @return \Illuminate\View\View
      */
