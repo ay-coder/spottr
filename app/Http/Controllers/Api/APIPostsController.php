@@ -78,6 +78,7 @@ class APIPostsController extends BaseApiController
             'user', 'tag_user', 'views', 'comments'
         ])
         ->where('user_id', '!=', $userInfo->id)
+        ->where('is_accepted', 1)
         ->whereIn('tag_user_id', $connectionIds)
         ->orWhereIn('user_id', $connectionIds)
         ->orderBy($orderBy, $order)
