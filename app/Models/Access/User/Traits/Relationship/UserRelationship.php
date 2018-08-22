@@ -97,7 +97,7 @@ trait UserRelationship
      */
     public function post_requests()
     {
-        return $this->hasMany(Posts::class, 'user_id')->where('is_accepted', 0);
+        return $this->hasMany(Posts::class, 'tag_user_id')->where('is_accepted', 0);
     }
 
     /**
