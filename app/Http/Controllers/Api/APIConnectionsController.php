@@ -118,7 +118,8 @@ class APIConnectionsController extends BaseApiController
         $myConnectionList       = $connectionModel->where('user_id', $userInfo->id)->pluck('other_user_id')->toArray();
         $otherConnectionList    = $connectionModel->where('other_user_id', $userInfo->id)->pluck('requested_user_id')->toArray();
         $userModel              = new User;   
-
+        $allConnections         = array_merge($myConnectionList, $otherConnectionList);
+        $allConnections         = array_unique($allConnections);
 
         if($request->get('keyword'))
         {
@@ -130,7 +131,7 @@ class APIConnectionsController extends BaseApiController
                       ->get();
             if(isset($suggestions) && count($suggestions))
             {
-                $itemsOutput = $this->connectionsTransformer->searchUserTranform($suggestions, $myConnectionList);
+                $itemsOutput = $this->connectionsTransformer->searchUserTranform($suggestions, $allConnections);
 
                 return $this->successResponse($itemsOutput);
             }
