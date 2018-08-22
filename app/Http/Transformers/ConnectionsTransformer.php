@@ -93,7 +93,7 @@ class ConnectionsTransformer extends Transformer
         return $response;
     }
 
-    public function searchUserTranform($items, $myConnectionList)
+    public function searchUserTranform($items, $myConnectionList = array(), $userRequestIds = array())
     {
         $response = [];
 
@@ -102,12 +102,14 @@ class ConnectionsTransformer extends Transformer
             foreach($items as $data)
             {
                 $isConnected    = in_array($data->id, $myConnectionList) ? 1 : 0;
+                $isRequested    = in_array($data->id, $userRequestIds ) ? 1 : 0;
                 $response[]     = [
                     'user_id'       => (int) $data->id,
                     'name'          => $this->nulltoBlank($data->name),
                     'email'         => $this->nulltoBlank($data->email),
                     'phone'         => $this->nulltoBlank($data->phone),
                     'is_connected'  => $isConnected,
+                    'is_requested'  => $isRequested,
                     'profile_pic'   => isset($data->profile_pic) ? URL::to('/').'/uploads/user/' . $data->profile_pic : '',
                     'dob'           => $this->nulltoBlank($data->dob),
                     'gender'        => $this->nulltoBlank($data->gender)

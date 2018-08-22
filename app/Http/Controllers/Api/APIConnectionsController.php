@@ -123,6 +123,11 @@ class APIConnectionsController extends BaseApiController
         $allConnections         = array_merge($myConnectionList, $otherConnectionList);
         $allConnections         = array_unique($allConnections);
 
+        $userRequestIds         = $connectionModel->where([
+            'user_id'       => $userInfo->id,
+            'is_accepted'   => 0
+        ])->pluck('other_user_id')->toArray();
+
         if($request->get('keyword'))
         {
             $suggestions = $userModel->whereNotIn('id', $otherConnectionList)
@@ -133,7 +138,7 @@ class APIConnectionsController extends BaseApiController
                       ->get();
             if(isset($suggestions) && count($suggestions))
             {
-                $itemsOutput = $this->connectionsTransformer->searchUserTranform($suggestions, $allConnections);
+                $itemsOutput = $this->connectionsTransformer->searchUserTranform($suggestions, $allConnections, $userRequestIds);
 
                 return $this->successResponse($itemsOutput);
             }
