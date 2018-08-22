@@ -221,16 +221,22 @@ class APIPostsController extends BaseApiController
 
         if($model)
         {
-            $text       = $userInfo->name . ' spotted ' . $tagUser->name;
+            $text       = $userInfo->name . ' has tagged you in a post';
             $payload    = [
-                'mtitle'    => '',
-                'mdesc'     => $text
+                'mtitle'            => '',
+                'mdesc'             => $text,
+                'post_id'           => $model->id,
+                'user_id'           => $userInfo->id,
+                'tagged_user_id'    => $tagUser->id,
+                'mtype'             => 'NEW_POST'
             ];
             
             Notifications::create([
-                'user_id'       => $tagUser->id,
-                'to_user_id'    => $userInfo->id,
-                'description'   => $text
+                'user_id'           => $tagUser->id,
+                'to_user_id'        => $userInfo->id,
+                'description'       => $text,
+                'post_id'           => $model->id,
+                'notification_type' => 'NEW_POST'
             ]);
 
             if(isset($tagUser->device_token))

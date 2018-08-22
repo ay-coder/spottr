@@ -8,6 +8,8 @@ use App\Repositories\Connections\EloquentConnectionsRepository;
 use App\Models\Access\User\User;
 use App\Models\Connections\Connections;
 use Illuminate\Support\Facades\Validator;
+use App\Library\Push\PushNotification;
+use App\Models\Notifications\Notifications;
 
 class APIConnectionsController extends BaseApiController
 {
@@ -204,8 +206,28 @@ class APIConnectionsController extends BaseApiController
         ];
             
         $model = $this->repository->create($input);
+        $requestedUser = User::where('id', $request->get('user_id'))->first();
 
+        $text       = $userInfo->name . ' has sent you a friend request';
+        $payload    = [
+            'mtitle'            => '',
+            'mdesc'             => $text,
+            'user_id'           => $userInfo->id,
+            'other_user_id'     => $requestedUser->id,
+            'mtype'             => 'NEW_CONNECTION'
+        ];
         
+        Notifications::create([
+            'user_id'           => $userInfo->id,
+            'to_user_id'        => $requestedUser->id,
+            'description'       => $text,
+            'notification_type' => 'NEW_CONNECTION'
+        ]);
+
+        if(isset($requestedUser->device_token))
+        {
+            PushNotification::iOS($payload, $requestedUser->device_token);
+        }
 
         if($model)
         {
@@ -426,6 +448,28 @@ class APIConnectionsController extends BaseApiController
         {
             $connection->is_accepted = 1;   
             $connection->save();
+
+            $text           = $userInfo->name . ' has accepted your friend request';
+            $requestedUser  = User::where('id', $request->get('user_id'))->first();
+            $payload    = [
+                'mtitle'            => '',
+                'mdesc'             => $text,
+                'user_id'           => $userInfo->id,
+                'other_user_id'     => $requestedUser->id,
+                'mtype'             => 'ACCEPT_CONNECTION'
+            ];
+            
+            Notifications::create([
+                'user_id'           => $userInfo->id,
+                'to_user_id'        => $requestedUser->id,
+                'description'       => $text,
+                'notification_type' => 'ACCEPT_CONNECTION'
+            ]);
+
+            if(isset($requestedUser->device_token))
+            {
+                PushNotification::iOS($payload, $requestedUser->device_token);
+            }  
 
             return $this->successResponse(['message' => 'Request Accepted Successfully !'], 'Connections is added Successfully');
         }

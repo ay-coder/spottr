@@ -118,9 +118,15 @@ class PushNotification
 		// Create the payload body
 		$body['aps'] = array(
 			'alert' => array(
-			    'title' => $data['mtitle'],
-                'body' => $data['mdesc'],
-			 ),
+			    'title' 	=> $data['mtitle'],
+                'body' 		=> $data['mdesc'],
+                'post_id' 	=> isset($data['post_id']) ? $data['post_id'] : '',
+                'user_id' 	=> isset($data['user_id']) ? $data['user_id'] : '',
+                'mtype' 	=> isset($data['mtype']) ? $data['mtype'] : '',
+                'comment_id' 	=> isset($data['comment_id']) ? $data['comment_id'] : '',
+                'tagged_user_id' 	=> isset($data['tagged_user_id']) ? $data['tagged_user_id'] : '',
+
+            ),
 			'sound' => 'default'
 		);
 

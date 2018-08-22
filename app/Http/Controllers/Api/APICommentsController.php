@@ -102,16 +102,22 @@ class APICommentsController extends BaseApiController
 
         if($model)
         {
-            $text       = $userInfo->name . ' commented on  ' . $postInfo->description;
+            $text       = $userInfo->name . '  has commented on your post';
             $payload    = [
                 'mtitle'    => '',
-                'mdesc'     => $text
+                'mdesc'     => $text,
+                'post_id'   => $model->post_id,
+                'comment_id' => $model->id,
+                'mtype'      => 'NEW_COMMENT'
             ];
             
             Notifications::create([
-                'user_id'       => $tagUser->id,
-                'to_user_id'    => $userInfo->id,
-                'description'   => $text
+                'user_id'           => $tagUser->id,
+                'to_user_id'        => $userInfo->id,
+                'description'       => $text,
+                'post_id'           => $model->post_id,
+                'comment_id'        => $model->id,
+                'notification_type' => 'NEW_POST'
             ]);
 
             if(isset($tagUser->device_token))
