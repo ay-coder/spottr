@@ -241,7 +241,7 @@ class APIConnectionsController extends BaseApiController
 
         if($model)
         {
-            return $this->successResponse(['message' => 'Request Added Successfully !'], 'Connections is Created Successfully');
+            return $this->successResponse(['message' => 'Request Added Successfully !'], 'Connection Request sent');
         }
 
         return $this->setStatusCode(400)->failureResponse([
