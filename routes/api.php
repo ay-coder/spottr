@@ -26,6 +26,8 @@ Route::group(['namespace' => 'Api',], function ()
     Route::post('user-profile', 'UsersController@getUserProfile')->name('api.user-profile');
 
     Route::get('config', 'UsersController@config')->name('api.config');
+
+    Route::get('test-push-notification', 'UsersController@testNotification')->name('api.test-notification');
     /*Route::post('verifyotp', 'UsersController@verifyOtp')->name('api.verifyotp');
     Route::post('resendotp', 'UsersController@resendOtp')->name('api.resendotp');
     Route::post('forgotpassword', 'UsersController@forgotPassword')->name('api.forgotPassword');

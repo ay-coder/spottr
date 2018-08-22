@@ -549,4 +549,30 @@ class UsersController extends BaseApiController
             'reason' => 'Invalid Input'
         ], 'Invalid Input');
     }
+
+    public function testNotification(Request $request)
+    {
+        $text       = 'This is Test Push Notification';
+        $payload    = [
+            'mtitle' => '',
+            'mdesc'  => $text,
+        ];
+                    
+        if($request->get('device_token'))
+        {
+            PushNotification::iOS($payload, $request->get('device_token'));
+            $successResponse = [
+                    'message' => 'Push Notification Done'
+            ];
+
+            return $this->successResponse($successResponse);
+        }
+
+        PushNotification::iOS($payload, '4f224e9fae894057074cb1a20682bd665f8bcb57');
+            $successResponse = [
+                    'message' => 'Push Notification Done to Default Device'
+            ];
+
+        return $this->successResponse($successResponse);
+    }
 }
