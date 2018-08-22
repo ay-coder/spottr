@@ -170,6 +170,7 @@ class PostsTransformer extends Transformer
             'phone'         => $this->nulltoBlank($item->user->phone),
             'profile_pic'   => isset($item->user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->user->profile_pic : '',
             'is_read'       => 1,
+            'is_accepted'       => (int) $item->is_accepted,
             'post_user_name'     => $item->user->name,
             'tagged_user_name'     => $item->tag_user->name,
             'viewCount'    => isset($item->views) ? count($item->views) : 0,
