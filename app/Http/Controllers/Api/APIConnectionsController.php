@@ -145,8 +145,7 @@ class APIConnectionsController extends BaseApiController
                     return $this->successResponse($itemsOutput);
                 }
 
-                return $this->successResponse('No Result Found !');
-
+                return $this->successResponse(['message' => 'No Result Found !'], 'No Result Found !');
             }
         }
         
