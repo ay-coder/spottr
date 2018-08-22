@@ -234,7 +234,8 @@ class EloquentPostsRepository extends DbRepository
     {
         if(isset($condition))
         {
-            return $this->model->where($condition)->with(['user', 'tag_user'])->orderBy($orderBy, $sort)->get();
+            return $this->model->where($condition)
+            ->with(['user', 'tag_user'])->orderBy($orderBy, $sort)->get();
         }
 
         return $this->model->with(['user', 'tag_user'])->orderBy($orderBy, $sort)->get();
