@@ -156,6 +156,9 @@ class PostsTransformer extends Transformer
         $item->user         = (object)$item->user;
         $item->tag_user     = (object)$item->tag_user;
 
+        $userName       = explode(' ', $item->user->name);
+        $taggedUserName = explode(' ', $item->tag_user->name);
+
         $response = [
             "post_id"       => (int) $item->id, 
             "user_id"       => (int) $item->user_id,
@@ -171,8 +174,8 @@ class PostsTransformer extends Transformer
             'profile_pic'   => isset($item->user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->user->profile_pic : '',
             'is_read'       => 1,
             'is_accepted'       => (int) $item->is_accepted,
-            'post_user_name'     => $item->user->name,
-            'tagged_user_name'     => $item->tag_user->name,
+            'post_user_name'     => $userName[0],
+            'tagged_user_name'     => $taggedUserName[0],
             'viewCount'    => isset($item->views) ? count($item->views) : 0,
             'view_count'    => isset($item->views) ? count($item->views) : 0,
             'comments_count' => isset($item->comments) ? count($item->comments) : 0,
