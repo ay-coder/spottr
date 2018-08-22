@@ -481,7 +481,7 @@ class APIConnectionsController extends BaseApiController
                 PushNotification::iOS($payload, $requestedUser->device_token);
             }  
 
-            return $this->successResponse(['message' => 'Request Accepted Successfully !'], 'Connections is added Successfully');
+            return $this->successResponse(['message' => 'Request Accepted Successfully !'], 'Connection added Successfully');
         }
        
         return $this->setStatusCode(404)->failureResponse([
@@ -522,7 +522,7 @@ class APIConnectionsController extends BaseApiController
         {
             $connection->delete();   
 
-            return $this->successResponse(['message' => 'Request Declined Successfully !'], 'Connections is Removed Successfully');
+            return $this->successResponse(['message' => 'Request Declined Successfully !'], 'Connection Removed Successfully');
         }
        
         return $this->setStatusCode(404)->failureResponse([
