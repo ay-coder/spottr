@@ -286,7 +286,7 @@ class APIPostsController extends BaseApiController
                         'post_id'   => $itemId
                     ]);
                 }
-                
+
                 $responseData = $this->postsTransformer->singlePost($postInfo);
 
                 return $this->successResponse($responseData, 'View Item');
@@ -433,6 +433,12 @@ class APIPostsController extends BaseApiController
                     {
                         PushNotification::iOS($payload, $postOwner->device_token);
                     }
+
+                    Notifications::where([
+                        'post_id'           => $request->get('post_id'),
+                        'notification_type' => 'NEW_POST'
+                    ])->delete();
+                    
                     $message = [
                         'message' => 'Post Request accepted !'
                     ];
