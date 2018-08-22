@@ -32,7 +32,7 @@ class UserTransformer extends Transformer
     public function userInfo($data)
     {
         $data = (object) $data;
-        $postCount         = isset($data->posts) ? count($data->posts) : 0;
+        $postCount         = isset($data->user_posts) ? count($data->user_posts) : 0;
         $notificationCount = isset($data->notifications) ? count($data->notifications) : 0;
         $myConnections     = isset($data->my_connections) ? count($data->my_connections) : 0;
 

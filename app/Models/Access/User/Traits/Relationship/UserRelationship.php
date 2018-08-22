@@ -95,6 +95,14 @@ trait UserRelationship
     /**
      * @return mixed
      */
+    public function user_posts()
+    {
+        return $this->hasMany(Posts::class, 'tag_user_id')->where('is_accepted', 1);
+    }
+
+    /**
+     * @return mixed
+     */
     public function post_requests()
     {
         return $this->hasMany(Posts::class, 'tag_user_id')->where('is_accepted', 0);
