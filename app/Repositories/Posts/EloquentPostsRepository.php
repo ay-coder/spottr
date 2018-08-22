@@ -235,10 +235,13 @@ class EloquentPostsRepository extends DbRepository
         if(isset($condition))
         {
             return $this->model->where($condition)
+            ->where('is_accepted', 1)
             ->with(['user', 'tag_user'])->orderBy($orderBy, $sort)->get();
         }
 
-        return $this->model->with(['user', 'tag_user'])->orderBy($orderBy, $sort)->get();
+        return $this->model->with(['user', 'tag_user'])
+            ->where('is_accepted', 1)
+            ->orderBy($orderBy, $sort)->get();
     }
 
     /**
