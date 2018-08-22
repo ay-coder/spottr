@@ -247,7 +247,7 @@ class APIPostsController extends BaseApiController
 
             $responseData = $this->postsTransformer->transform($model);
 
-            return $this->successResponse($responseData, 'Posts is Created Successfully');
+            return $this->successResponse($responseData, 'Post Created Successfully');
         }
 
         return $this->setStatusCode(400)->failureResponse([
@@ -438,7 +438,7 @@ class APIPostsController extends BaseApiController
                         'post_id'           => $request->get('post_id'),
                         'notification_type' => 'NEW_POST'
                     ])->delete();
-                    
+
                     $message = [
                         'message' => 'Post Request accepted !'
                     ];
