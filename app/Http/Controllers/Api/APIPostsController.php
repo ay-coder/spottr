@@ -394,9 +394,34 @@ class APIPostsController extends BaseApiController
 
             if(isset($model->id))
             {
+                $postOwner = User::where('id', $model->user_id)->first();
                 $model->is_accepted = 1;
                 if($model->save())
                 {
+                    $text       = $userInfo->name . ' has approved your post';
+                    $payload    = [
+                        'mtitle'            => '',
+                        'mdesc'             => $text,
+                        'post_id'           => $model->id,
+                        'user_id'           => $postOwner->id,
+                        'tagged_user_id'    => $model->tag_user_id,
+                        'mtype'             => 'APPROVED_POST'
+                    ];
+                    
+                    Notifications::create([
+                        'user_id'           => $userInfo->id,
+                        'to_user_id'        => $postOwner->id,
+                        'description'       => $text,
+                        'post_id'           => $model->id,
+                        'user_id'           => $postOwner->id,
+                        'tagged_user_id'    => $model->tag_user_id,
+                        'notification_type' => 'APPROVED_POST'
+                    ]);
+
+                    if(isset($postOwner->device_token))
+                    {
+                        PushNotification::iOS($payload, $postOwner->device_token);
+                    }
                     $message = [
                         'message' => 'Post Request accepted !'
                     ];
