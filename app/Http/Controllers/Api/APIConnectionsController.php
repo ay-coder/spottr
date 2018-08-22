@@ -459,8 +459,8 @@ class APIConnectionsController extends BaseApiController
             $payload    = [
                 'mtitle'            => '',
                 'mdesc'             => $text,
-                'user_id'           => $userInfo->id,
-                'tagged_user_id'    => $requestedUser->id,
+                'user_id'           => $requestedUser->id,
+                'tagged_user_id'    => $userInfo->id,
                 'mtype'             => 'ACCEPT_CONNECTION'
             ];
             
