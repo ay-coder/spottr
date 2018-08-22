@@ -114,7 +114,7 @@ class UsersController extends BaseApiController
     {
         $successResponse = [
             'support_number'        => '110001010',
-            'rateus_url'            => 'https://itunes.apple.com/us/app/spottr-social-network/id1432398480?ls=1&mt=8',
+            'rateus_url'            => 'https://itunes.apple.com/app/spottr-social-network/id1432398480?ls=1&mt=8',
             'privacy_policy_url'    => route('frontend.privacy-policy'),
             'about_us_url'          => route('frontend.about-us'),
             'terms_conditions_url'  => route('frontend.terms-conditions'),
