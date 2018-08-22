@@ -60,6 +60,11 @@ class PostsTransformer extends Transformer
             $item->user = (object)$item->user;
             $isRead     = in_array($item->id, $userReadPostIds) ? 1 :0;
 
+            if($item->is_accepted == 0)
+            {
+                continue;
+            }
+            
             if($isRead == 0) 
             {
                 $response['unread'][] = [
