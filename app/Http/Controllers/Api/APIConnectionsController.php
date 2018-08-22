@@ -460,7 +460,7 @@ class APIConnectionsController extends BaseApiController
                 'mtitle'            => '',
                 'mdesc'             => $text,
                 'user_id'           => $userInfo->id,
-                'other_user_id'     => $requestedUser->id,
+                'tagged_user_id'    => $requestedUser->id,
                 'mtype'             => 'ACCEPT_CONNECTION'
             ];
             
