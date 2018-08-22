@@ -138,7 +138,7 @@ class APIConnectionsController extends BaseApiController
                       ->get();
             if(isset($suggestions) && count($suggestions))
             {
-                $itemsOutput = $this->connectionsTransformer->searchUserTranform($suggestions, $allConnections, $userRequestIds);
+                $itemsOutput = $this->connectionsTransformer->searchUserTranform($suggestions, $allConnections, $userRequestIds, $userInfo);
 
                 return $this->successResponse($itemsOutput);
             }
@@ -516,7 +516,7 @@ class APIConnectionsController extends BaseApiController
         if(isset($connection) && isset($connection->id))
         {
             $connection->delete();   
-            
+
             return $this->successResponse(['message' => 'Request Declined Successfully !'], 'Connections is Removed Successfully');
         }
        

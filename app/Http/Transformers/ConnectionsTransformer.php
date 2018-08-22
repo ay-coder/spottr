@@ -93,7 +93,7 @@ class ConnectionsTransformer extends Transformer
         return $response;
     }
 
-    public function searchUserTranform($items, $myConnectionList = array(), $userRequestIds = array())
+    public function searchUserTranform($items, $myConnectionList = array(), $userRequestIds = array(), $userInfo = null)
     {
         $response = [];
 
@@ -101,6 +101,10 @@ class ConnectionsTransformer extends Transformer
         {
             foreach($items as $data)
             {
+                if(isset($userInfo) && $userInfo->id == $data->id)
+                {
+                    continue;
+                }
                 $isConnected    = in_array($data->id, $myConnectionList) ? 1 : 0;
                 $isRequested    = in_array($data->id, $userRequestIds ) ? 1 : 0;
                 $response[]     = [
