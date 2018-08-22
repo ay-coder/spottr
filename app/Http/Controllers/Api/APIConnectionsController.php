@@ -140,7 +140,15 @@ class APIConnectionsController extends BaseApiController
             {
                 $itemsOutput = $this->connectionsTransformer->searchUserTranform($suggestions, $allConnections, $userRequestIds, $userInfo);
 
-                return $this->successResponse($itemsOutput);
+                if(count($itemsOutput) isset($itemsOutput))
+                {
+                    return $this->successResponse($itemsOutput);
+                }
+
+                return $this->successResponse([
+                    'message' => 'No Result Found !'
+                ]);
+
             }
         }
         
