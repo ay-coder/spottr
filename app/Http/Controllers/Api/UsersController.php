@@ -20,6 +20,7 @@ use Auth;
 use App\Repositories\Backend\Access\User\UserRepository;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Connections\Connections;
+use App\Library\Push\PushNotification;
 
 class UsersController extends BaseApiController
 {
