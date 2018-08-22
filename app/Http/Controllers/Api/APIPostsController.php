@@ -272,20 +272,21 @@ class APIPostsController extends BaseApiController
             if($postInfo)
             {
                 $userId     = Auth::user()->id;
+                $readPost   = new ReadPost;
 
-                $isExists   = ReadPost::where([
-                    'user_id' => $userId,
-                    'post_id' => $itemId
-                ])->first();
+                $readCount  = $readPost->where([
+                    'user_id'   => $userId,
+                    'post_id'   => $itemId
+                ])->count();
 
-                if(!isset($isExists->id))
+                if($readCount == 0)
                 {
-                    ReadPost::create([
+                    $readPost->create([
                         'user_id'   => $userId,
                         'post_id'   => $itemId
                     ]);
                 }
-
+                
                 $responseData = $this->postsTransformer->singlePost($postInfo);
 
                 return $this->successResponse($responseData, 'View Item');
