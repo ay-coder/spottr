@@ -203,11 +203,45 @@ class UsersController extends BaseApiController
 
             if($user)
             {
-                if(1==1) // Send Mail Succes
+                $password       = str_random(6);
+                $user->password = bcrypt($password);
+                if ($user->save()) 
                 {
-                    $successResponse = [
-                        'message' => 'Reset Password Mail send successfully.'
-                    ];
+                    $to = $user->email;
+                    $subject = "Reset Password - Spottr App";
+
+                    $message = "
+                    <html>
+                    <head>
+                    <title>Reset Password Spottr App</title>
+                    </head>
+                    <body>
+                    <p>
+                        Hello $user->name,
+                    </p>
+                    <p>
+                     Please use this password for Login <strong>$password </strong> Let us know if you have any concern.
+                    </p>
+                    <p>
+                    Spottr
+                    
+                    </p>
+                    </body>
+                    </html>
+                    ";
+
+                    // Always set content-type when sending HTML email
+                    $headers = "MIME-Version: 1.0" . "\r\n";
+                    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+                    // More headers
+                    $headers .= 'From: <info@spottrmedia.com>' . "\r\n";
+                    if(mail($to, $subject, $message, $headers))
+                    {
+                        $successResponse = [
+                            'message' => 'Reset Password Mail send successfully.'
+                        ];
+                    }
                 }
 
                 return $this->successResponse($successResponse);
