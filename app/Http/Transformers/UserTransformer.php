@@ -9,6 +9,7 @@ class UserTransformer extends Transformer
 {
     public function transform($data) 
     {
+        $postRequestCount  = isset($data->post_requests) ? count($data->post_requests) : 0;
         return [
             'user_id'       => $data->id,
             'token'         => $this->nulltoBlank($data->token),
@@ -23,6 +24,7 @@ class UserTransformer extends Transformer
             'description'   => 'Lorem Ipusm Lorem Ipsum description',
             'connectionCount' => isset($data->connections) ? count($data->connections) : 0, 
             'postCount'     => isset($data->connections) ? count($data->connections) : 0, 
+            'postRequestCount'  => (int) $postRequestCount,
             'notification_count' => (int) 0
         ];
     }
@@ -35,6 +37,8 @@ class UserTransformer extends Transformer
         $myConnections     = isset($data->my_connections) ? count($data->my_connections) : 0;
 
         $accConnections     = isset($data->accepted_connections) ? count($data->accepted_connections) : 0;
+
+        $postRequestCount  = isset($data->post_requests) ? count($data->post_requests) : 0;
         
         $connectionCount =  $myConnections + $accConnections;
         
@@ -53,6 +57,7 @@ class UserTransformer extends Transformer
             'connectionCount'   => (int) $connectionCount, 
             'postCount'             => (int) $postCount, 
             'notification_count' => (int) $notificationCount,
+            'postRequestCount'  => (int) $postRequestCount,
             'is_connected'      => $data->is_connected,
             'is_same_user'      => $data->is_same_user,
             'is_requested'      => $data->is_connected == 1 ? 0 : $data->is_requested,
