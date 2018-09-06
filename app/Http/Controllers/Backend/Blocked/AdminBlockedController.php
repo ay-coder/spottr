@@ -147,6 +147,14 @@ class AdminBlockedController extends Controller
     {
         return Datatables::of($this->repository->getForDataTable())
             ->escapeColumns(['id', 'sort'])
+            ->addColumn('blocked_by', function ($item) 
+            {
+                return $item->user->name;
+            })
+            ->addColumn('post_id', function ($item) 
+            {
+                return $item->post->description;
+            })
             ->addColumn('actions', function ($item) {
                 return $item->admin_action_buttons;
             })
