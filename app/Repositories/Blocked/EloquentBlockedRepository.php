@@ -32,14 +32,12 @@ class EloquentBlockedRepository extends DbRepository
      * @var array
      */
     public $tableHeaders = [
-        'id'        => 'Id',
-'blocked_by'        => 'Blocked_by',
-'user_id'        => 'User_id',
-'post_id'        => 'Post_id',
-'comment'        => 'Comment',
-'created_at'        => 'Created_at',
-'updated_at'        => 'Updated_at',
-"actions"         => "Actions"
+        'id'            => 'Id',
+        'blocked_by'    => 'Blocked By',
+        'post_id'       => 'Post Description',
+        'comment'       => 'Comment',
+        'created_at'    => 'Blocked At',
+        "actions"       => "Actions"
     ];
 
     /**
@@ -60,12 +58,7 @@ class EloquentBlockedRepository extends DbRepository
                 'searchable'    => true,
                 'sortable'      => true
             ],
-		'user_id' =>   [
-                'data'          => 'user_id',
-                'name'          => 'user_id',
-                'searchable'    => true,
-                'sortable'      => true
-            ],
+		
 		'post_id' =>   [
                 'data'          => 'post_id',
                 'name'          => 'post_id',
@@ -81,12 +74,6 @@ class EloquentBlockedRepository extends DbRepository
 		'created_at' =>   [
                 'data'          => 'created_at',
                 'name'          => 'created_at',
-                'searchable'    => true,
-                'sortable'      => true
-            ],
-		'updated_at' =>   [
-                'data'          => 'updated_at',
-                'name'          => 'updated_at',
                 'searchable'    => true,
                 'sortable'      => true
             ],

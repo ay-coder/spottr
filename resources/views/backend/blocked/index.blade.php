@@ -1,13 +1,13 @@
 @extends ('backend.layouts.app')
 
-@section ('title',  isset($repository->moduleTitle) ? $repository->moduleTitle. ' Management' : 'Management')
+@section ('title',  isset($repository->moduleTitle) ? $repository->moduleTitle. ' Comments Management' : 'Comments Management')
 
 @section('after-styles')
     {{ Html::style("css/backend/plugin/datatables/dataTables.bootstrap.min.css") }}
 @endsection
 
 @section('page-header')
-    <h1>{{ isset($repository->moduleTitle) ? $repository->moduleTitle : '' }} Management</h1>
+    <h1>{{ isset($repository->moduleTitle) ? $repository->moduleTitle : '' }} Comments Management</h1>
 @endsection
 
 @section('content')
