@@ -9,6 +9,8 @@
 use App\Models\Comments\Comments;
 use App\Repositories\DbRepository;
 use App\Exceptions\GeneralException;
+use App\Models\Access\User\User;
+use App\Models\Posts\Posts;
 
 class EloquentCommentsRepository extends DbRepository
 {
@@ -32,13 +34,12 @@ class EloquentCommentsRepository extends DbRepository
      * @var array
      */
     public $tableHeaders = [
-        'id'        => 'Id',
-'user_id'        => 'User_id',
-'post_id'        => 'Post_id',
-'comment'        => 'Comment',
-'created_at'        => 'Created_at',
-'updated_at'        => 'Updated_at',
-"actions"         => "Actions"
+        'id'            => 'Id',
+        'username'      => 'Username',
+        'post'          => 'Post Title',
+        'comment'       => 'Comment',
+        'created_at'    => 'Created Time',
+        "actions"       => "Actions"
     ];
 
     /**
@@ -53,15 +54,15 @@ class EloquentCommentsRepository extends DbRepository
                 'searchable'    => true,
                 'sortable'      => true
             ],
-		'user_id' =>   [
-                'data'          => 'user_id',
-                'name'          => 'user_id',
+		'username' =>   [
+                'data'          => 'username',
+                'name'          => 'username',
                 'searchable'    => true,
                 'sortable'      => true
             ],
-		'post_id' =>   [
-                'data'          => 'post_id',
-                'name'          => 'post_id',
+        'post' =>   [
+                'data'          => 'post',
+                'name'          => 'post',
                 'searchable'    => true,
                 'sortable'      => true
             ],
@@ -77,12 +78,7 @@ class EloquentCommentsRepository extends DbRepository
                 'searchable'    => true,
                 'sortable'      => true
             ],
-		'updated_at' =>   [
-                'data'          => 'updated_at',
-                'name'          => 'updated_at',
-                'searchable'    => true,
-                'sortable'      => true
-            ],
+		
 		'actions' => [
             'data'          => 'actions',
             'name'          => 'actions',
@@ -159,7 +155,9 @@ class EloquentCommentsRepository extends DbRepository
      */
     public function __construct()
     {
-        $this->model = new Comments;
+        $this->model        = new Comments;
+        $this->userModel    = new User;
+        $this->postModel    = new Posts;
     }
 
     /**
@@ -257,7 +255,9 @@ class EloquentCommentsRepository extends DbRepository
     public function getTableFields()
     {
         return [
-            $this->model->getTable().'.*'
+            $this->model->getTable().'.*',
+            $this->userModel->getTable().'.name as username',
+            $this->postModel->getTable().'.description as post',
         ];
     }
 
@@ -266,7 +266,10 @@ class EloquentCommentsRepository extends DbRepository
      */
     public function getForDataTable()
     {
-        return $this->model->select($this->getTableFields())->get();
+        return  $this->model->select($this->getTableFields())
+                ->leftjoin($this->userModel->getTable(), $this->userModel->getTable().'.id', '=', $this->model->getTable().'.user_id')
+                ->leftjoin($this->postModel->getTable(), $this->postModel->getTable().'.id', '=', $this->model->getTable().'.post_id')->get();
+        //return $this->model->select($this->getTableFields())->get();
     }
 
     /**

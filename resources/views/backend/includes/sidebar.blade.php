@@ -37,6 +37,20 @@
                 </a>
             </li>
 
+            <li class="{{ active_class(Active::checkUriPattern('admin/posts')) }}">
+                <a href="{{ route('admin.posts.index') }}">
+                    <i class="fa fa-dashboard"></i>
+                    <span>Manage Posts</span>
+                </a>
+            </li>
+
+            <li class="{{ active_class(Active::checkUriPattern('admin/comments')) }}">
+                <a href="{{ route('admin.comments.index') }}">
+                    <i class="fa fa-dashboard"></i>
+                    <span>Comments</span>
+                </a>
+            </li>
+
             <li class="header">{{ trans('menus.backend.sidebar.system') }}</li>
 
             @role(1)
