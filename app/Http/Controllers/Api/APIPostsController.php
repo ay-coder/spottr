@@ -222,7 +222,7 @@ class APIPostsController extends BaseApiController
 
         if($model)
         {
-            $text       = $userInfo->name . ' has tagged you in a post';
+            $text       = $userInfo->name . ' has spotted you in a post';
             $payload    = [
                 'mtitle'            => '',
                 'mdesc'             => $text,

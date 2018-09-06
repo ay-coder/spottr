@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Yajra\Datatables\Facades\Datatables;
 use App\Repositories\Posts\EloquentPostsRepository;
+use URL;
+use Html;
 
 /**
  * Class AdminPostsController
@@ -146,6 +148,7 @@ class AdminPostsController extends Controller
     public function getTableData()
     {
         return Datatables::of($this->repository->getForDataTable())
+            ->escapeColumns(['id', 'sort'])
             ->addColumn('username', function ($item) {
                 return $item->user->name;
             })
@@ -153,7 +156,9 @@ class AdminPostsController extends Controller
                 return $item->tag_user->name;
             })
             ->addColumn('media', function ($item) {
-                return $item->media;
+                return  Html::image('/uploads/media/'.$item->media, 'test', ['width' => 60, 'height' => 60]);
+                //return URL::to('/').'/uploads/media/' . $item->media;
+                //return $item->tag_user->name;
             })
             ->addColumn('description', function ($item) {
                 return $item->description;

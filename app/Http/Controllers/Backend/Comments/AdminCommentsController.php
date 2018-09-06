@@ -147,6 +147,9 @@ class AdminCommentsController extends Controller
     {
         return Datatables::of($this->repository->getForDataTable())
             ->escapeColumns(['id', 'sort'])
+            ->addColumn('created_at', function ($item) {
+                return date('m/d/Y H:i:s', strtotime($item->created_at));
+            })
             ->addColumn('actions', function ($item) {
                 return $item->admin_action_buttons;
             })

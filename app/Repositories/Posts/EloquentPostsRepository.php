@@ -33,13 +33,14 @@ class EloquentPostsRepository extends DbRepository
      * @var array
      */
     public $tableHeaders = [
+        'id'                => '#',
         'username'          => 'Creator',
         'tag_username'      => 'Tagged User',
-        'media'             => 'Media',
+        'media'             => 'Image',
         'description'       => 'Description',
         'is_image'          => 'Image',
         'is_video'          => 'Video',
-        "actions"         => "Actions"
+        'actions'           => 'Actions'
     ];
 
     /**
@@ -48,6 +49,12 @@ class EloquentPostsRepository extends DbRepository
      * @var array
      */
     public $tableColumns = [
+        'id' =>   [
+                'data'          => 'id',
+                'name'          => 'id',
+                'searchable'    => true,
+                'sortable'      => true
+            ],
         'username' =>   [
                 'data'          => 'username',
                 'name'          => 'username',
@@ -60,7 +67,6 @@ class EloquentPostsRepository extends DbRepository
                 'searchable'    => true,
                 'sortable'      => true
             ],
-		
 		'media' =>   [
                 'data'          => 'media',
                 'name'          => 'media',
@@ -85,13 +91,13 @@ class EloquentPostsRepository extends DbRepository
                 'searchable'    => true,
                 'sortable'      => true
             ],
-	    'actions' => [
+        'actions' => [
             'data'          => 'actions',
             'name'          => 'actions',
             'searchable'    => false,
             'sortable'      => false
         ]
-    ];
+	];
 
     /**
      * Is Admin
