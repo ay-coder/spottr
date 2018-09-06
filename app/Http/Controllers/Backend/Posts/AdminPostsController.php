@@ -150,15 +150,13 @@ class AdminPostsController extends Controller
         return Datatables::of($this->repository->getForDataTable())
             ->escapeColumns(['id', 'sort'])
             ->addColumn('username', function ($item) {
-                return $item->user->name;
+                return isset($item->user) ? $item->user->name : '';
             })
             ->addColumn('tag_username', function ($item) {
-                return $item->tag_user->name;
+                return isset($item->tag_user) ? $item->tag_user->name : '';
             })
             ->addColumn('media', function ($item) {
                 return  Html::image('/uploads/media/'.$item->media, 'test', ['width' => 60, 'height' => 60]);
-                //return URL::to('/').'/uploads/media/' . $item->media;
-                //return $item->tag_user->name;
             })
             ->addColumn('description', function ($item) {
                 return $item->description;
