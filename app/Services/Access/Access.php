@@ -4,6 +4,7 @@ namespace App\Services\Access;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use App\Models\ReadPost\ReadPost;
+use App\Models\Connections\Connections;
 
 /**
  * Class Access.
@@ -166,5 +167,35 @@ class Access
         }
         
         return [];
-    }    
+    }  
+
+    /**
+     * MyConnections
+
+     * @param int $userId
+     * @return array
+     */
+    public function myConnections($userId = null)  
+    {
+        $allConnections = [];
+
+        if(isset($userId))
+        {
+            $connectionModel        = new Connections;
+            $myConnectionList       = $connectionModel->where([
+                'is_accepted'   => 1,
+                'user_id'       => $userId
+            ])->pluck('other_user_id')->toArray();
+
+            $otherConnectionList    = $connectionModel->where([
+                'is_accepted'   => 1,
+                'other_user_id' => $userId
+            ])->pluck('requested_user_id')->toArray();
+
+            $allConnections         = array_merge($myConnectionList, $otherConnectionList);
+            $allConnections         = array_unique($allConnections);
+        }
+
+        return $allConnections;
+    }
 }
