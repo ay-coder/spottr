@@ -64,6 +64,11 @@ class PostsTransformer extends Transformer
             {
                 continue;
             }
+
+            if($item->user_id == $user->id)
+            {
+                continue;
+            }
             
             if($isRead == 0) 
             {
