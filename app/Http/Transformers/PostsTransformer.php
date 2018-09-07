@@ -132,6 +132,11 @@ class PostsTransformer extends Transformer
             $item->user = (object)$item->user;
             $isRead     = in_array($item->id, $userReadPostIds) ? 1 :0;
 
+            if($user->id == $item->user_id)
+            {
+                continue;
+            }
+
             $response[] = [
                 "post_id"       => (int) $item->id, 
                 "user_id"       => (int) $item->user_id,

@@ -47,7 +47,7 @@ class ConnectionsTransformer extends Transformer
         return $response;
     }
 
-    public function connectionTransform($items)
+    public function connectionTransform($items, $meConnections = array())
     {
         $response = [];
 
@@ -55,11 +55,14 @@ class ConnectionsTransformer extends Transformer
         {
             foreach($items as $data)
             {
+                $isConnected = (is_array($meConnections) && count($meConnections)) ? in_array(!$data->id, $meConnections) ? 0 : 1 : 1;
+
                 $response[] = [
                     'user_id'       => (int) $data->id,
                     'name'          => $this->nulltoBlank($data->name),
                     'email'         => $this->nulltoBlank($data->email),
                     'phone'         => $this->nulltoBlank($data->phone),
+                    'is_connected'  => $isConnected,
                     'profile_pic'   => isset($data->profile_pic) ? URL::to('/').'/uploads/user/' . $data->profile_pic : '',
                     'dob'           => $this->nulltoBlank($data->dob),
                     'gender'        => $this->nulltoBlank($data->gender)

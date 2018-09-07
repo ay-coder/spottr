@@ -85,6 +85,9 @@ class APIConnectionsController extends BaseApiController
     public function myConnections(Request $request)
     {
         $userInfo               = $request->get('user_id') ? User::find($request->get('user_id')) : $this->getAuthenticatedUser();
+
+        $me                     = $this->getAuthenticatedUser();
+        $meConnections          = access()->myConnections($me->id);
         $userModel              = new User;   
         $connectionModel        = new Connections;
         $myConnectionList       = $connectionModel->where('is_accepted', 1)->where('user_id', $userInfo->id)->pluck('other_user_id')->toArray();
