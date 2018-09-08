@@ -100,7 +100,7 @@ class APIConnectionsController extends BaseApiController
 
         if(isset($items) && count($items))
         {
-            $itemsOutput = $this->connectionsTransformer->connectionTransform($items);
+            $itemsOutput = $this->connectionsTransformer->connectionTransform($items, $meConnections);
 
             return $this->successResponse($itemsOutput);
         }

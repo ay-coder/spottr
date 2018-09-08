@@ -55,7 +55,7 @@ class ConnectionsTransformer extends Transformer
         {
             foreach($items as $data)
             {
-                $isConnected = (is_array($meConnections) && count($meConnections)) ? in_array(!$data->id, $meConnections) ? 0 : 1 : 1;
+                $isConnected = (is_array($meConnections) && count($meConnections)) ? in_array($data->id, $meConnections) ? 1 : 0 : 0;
 
                 $response[] = [
                     'user_id'       => (int) $data->id,
