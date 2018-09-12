@@ -1,6 +1,11 @@
 @extends('frontend.layouts.basic')
 
 @section('content')
+<style type="text/css">
+	body {
+		background-color: white;
+	}
+</style>
     <div class="row">
         <strong>Terms and Conditions</strong>
         <ul>

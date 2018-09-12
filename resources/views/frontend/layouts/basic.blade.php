@@ -32,6 +32,12 @@
                 'csrfToken' => csrf_token(),
             ]); ?>
         </script>
+
+        <style type="text/css">
+            body {
+                background-color: white;
+            }
+        </style>
     </head>
     <body id="app-layout">
         <div id="app">

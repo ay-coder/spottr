@@ -50,7 +50,7 @@ class APINotificationsController extends BaseApiController
         $userInfo   = $this->getAuthenticatedUser();
         $paginate   = $request->get('paginate') ? $request->get('paginate') : false;
         $orderBy    = $request->get('orderBy') ? $request->get('orderBy') : 'id';
-        $order      = $request->get('order') ? $request->get('order') : 'ASC';
+        $order      = $request->get('order') ? $request->get('order') : 'DESC';
         $items      = $paginate ? $this->repository->model->with(['user', 'to_user'])->where('user_id', $userInfo->id)->orderBy($orderBy, $order)->paginate($paginate)->items() : $this->repository->getAll($userInfo->id, $orderBy, $order);
 
         if(isset($items) && count($items))
@@ -62,7 +62,7 @@ class APINotificationsController extends BaseApiController
         }
 
         return $this->setStatusCode(400)->failureResponse([
-            'message' => 'Unable to find Notifications!'
+            'message' => 'Unable to find notifications!'
             ], 'No Notifications Found !');
     }
 

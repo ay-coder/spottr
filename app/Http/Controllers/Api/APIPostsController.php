@@ -92,7 +92,7 @@ class APIPostsController extends BaseApiController
         }
 
         return $this->setStatusCode(400)->failureResponse([
-            'message' => 'Unable to find Posts!'
+            'message' => 'Unable to find posts!'
             ], 'No Posts Found !');
     }
 
@@ -126,7 +126,7 @@ class APIPostsController extends BaseApiController
         }
 
         return $this->setStatusCode(400)->failureResponse([
-            'message' => 'Unable to find Posts!'
+            'message' => 'Unable to find posts!'
             ], 'No Posts Found !');
     }
 
@@ -159,9 +159,9 @@ class APIPostsController extends BaseApiController
             return $this->successResponse($itemsOutput);
         }
 
-        return $this->setStatusCode(400)->failureResponse([
-            'message' => 'Unable to find Posts!'
-            ], 'No Posts Found !');
+        return $this->setStatusCode(200)->failureResponse([
+            'message' => 'No posts to display!'
+            ], 'No Posts Found!');
     }
 
     /**
@@ -382,7 +382,7 @@ class APIPostsController extends BaseApiController
         }
 
         return $this->setStatusCode(400)->failureResponse([
-            'message' => 'Unable to find Post Request!'
+            'message' => 'Unable to find post request'
             ], 'No Posts Request Found !');
     } 
 
@@ -449,7 +449,7 @@ class APIPostsController extends BaseApiController
         }
            
         return $this->setStatusCode(400)->failureResponse([
-            'message' => 'Unable to find Post Request!'
+            'message' => 'Unable to find post request'
             ], 'No Posts Request Found !');
     } 
 
@@ -484,7 +484,7 @@ class APIPostsController extends BaseApiController
         }
            
         return $this->setStatusCode(400)->failureResponse([
-            'message' => 'Unable to find Post Request!'
+            'message' => 'Unable to find post request'
             ], 'No Posts Request Found !');
     }   
 }

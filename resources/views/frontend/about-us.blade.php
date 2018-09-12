@@ -1,9 +1,12 @@
 @extends('frontend.layouts.basic')
 
 @section('content')
+<style type="text/css">
+	body {
+		background-color: white;
+	}
+</style>
     <div class="row">
-        <center><h1>About Us</h1></center>
-        
         <strong> What is spottr?</strong>
 <p>
 Spottr is a social media app unlike any other. The way people can now connect is more unique, special and fun than ever before! Spottr allows users to post photos and videos (with captions, views and comments) onto their friends pages so the content shared is in the right place. It is shown who posted the photo/video on to your/your friends page, so people are held accountable. This means that the photos and videos you have on your page have all been posted by your friends! However, when a friend posts onto your page or vise versa, the person receiving the post must approve of it before he/she’s friends see it on their feed. Lastly, since all the content posted onto your page has been posted by your friends, it truly shows the most authentic version of yourself. Since you can approve or disprove of anything posted on to your page, your page will be filled with tons of cool stuff that has been posted by your friends and that you’re proud of.

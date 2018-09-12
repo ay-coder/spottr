@@ -72,7 +72,7 @@ class APIConnectionsController extends BaseApiController
         }
 
         return $this->setStatusCode(400)->failureResponse([
-            'message' => 'Unable to find Connections!'
+            'message' => 'Unable to find connections!'
             ], 'No Connections Found !');
     }
 
@@ -106,7 +106,7 @@ class APIConnectionsController extends BaseApiController
         }
 
         return $this->setStatusCode(400)->failureResponse([
-            'message' => 'Unable to find Connections!'
+            'message' => 'Unable to find connections!'
             ], 'No Connections Found !');    
     }
 
@@ -154,7 +154,7 @@ class APIConnectionsController extends BaseApiController
         
 
         return $this->setStatusCode(400)->failureResponse([
-            'message' => 'Unable to find Connections!'
+            'message' => 'Unable to find connections!'
             ], 'No Connections Found !');
     }
 
