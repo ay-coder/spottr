@@ -13,6 +13,7 @@ class UserTransformer extends Transformer
         return [
             'user_id'       => $data->id,
             'token'         => $this->nulltoBlank($data->token),
+            'username'      => $this->nulltoBlank($data->username),
             'device_token'  => $data->device_token,
             'name'          => $this->nulltoBlank($data->name),
             'email'         => $this->nulltoBlank($data->email),
@@ -47,6 +48,7 @@ class UserTransformer extends Transformer
             'token'         => isset($data->token) ? $this->nulltoBlank($data->token) : '',
             'device_token'  => $data->device_token,
             'name'          => $this->nulltoBlank($data->name),
+            'username'      => $this->nulltoBlank($data->username),
             'email'         => $this->nulltoBlank($data->email),
             'phone'         => $this->nulltoBlank($data->phone),
             'profile_pic'   => isset($data->profile_pic) ? URL::to('/').'/uploads/user/' . $data->profile_pic : '',
@@ -131,6 +133,7 @@ class UserTransformer extends Transformer
             'token'         => $this->nulltoBlank($data->token),
             'device_token'  => $data->device_token,
             'name'          => $this->nulltoBlank($data->name),
+            'username'      => $this->nulltoBlank($data->username),
             'email'         => $this->nulltoBlank($data->email),
             'phone'         => $this->nulltoBlank($data->phone),
             'profile_pic'   => isset($data->profile_pic) ? URL::to('/').'/uploads/user/' . $data->profile_pic : '',

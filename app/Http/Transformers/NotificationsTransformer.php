@@ -26,8 +26,8 @@ class NotificationsTransformer extends Transformer
         $dt     = Carbon::now();
         return [
             "notification_id"   => (int) $item->id,
-            "user_id"           => (int) $item->user_id,
-            "tagged_user_id"    => (int) $item->to_user_id,
+            "user_id"           => (int) $item->to_user_id,
+            "tagged_user_id"    => (int) $item->user_id,
             "post_id"           => (int) $item->post_id,
             "comment_id"        => (int) $item->comment_id,
             "notification_type" => $this->nulltoBlank($item->notification_type),
