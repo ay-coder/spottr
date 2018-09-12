@@ -44,6 +44,7 @@ class PostsTransformer extends Transformer
     {
         $userReadPostIds    = [];
         $userReadPosts      = access()->getReadPostIds($user->id);
+        $myConnections      = access()->myConnections($user->id);
 
         if($userReadPosts)
         {   
@@ -58,6 +59,12 @@ class PostsTransformer extends Transformer
         foreach($items as $item)
         {
             $item->user = (object)$item->user;
+
+            if(!in_array($item->tag_user_id, $myConnections))
+            {
+                continue;
+            }
+            
             $isRead     = in_array($item->id, $userReadPostIds) ? 1 :0;
 
             if($item->is_accepted == 0)
@@ -65,11 +72,14 @@ class PostsTransformer extends Transformer
                 continue;
             }
 
-            if($item->user_id == $user->id)
+            if($item->tag_user_id == $user->id)
             {
                 continue;
             }
-            
+
+            $tagUser = explode(' ', $item->tag_user->name);
+            $tagUser = ucfirst($tagUser[0]);
+
             if($isRead == 0) 
             {
                 $response['unread'][] = [
@@ -81,12 +91,12 @@ class PostsTransformer extends Transformer
                     "description"   =>  $item->description,
                     "is_image"      => (int) $item->is_image,
                     "is_video"      => (int) $item->is_video,
-                    'name'          => $this->nulltoBlank($item->user->name),
-                    'email'         => $this->nulltoBlank($item->user->email),
-                    'phone'         => $this->nulltoBlank($item->user->phone),
+                    'name'          => $this->nulltoBlank($tagUser),
+                    'email'         => $this->nulltoBlank($item->tag_user->email),
+                    'phone'         => $this->nulltoBlank($item->tag_user->phone),
                     'viewCount'     => isset($item->views) ? count($item->views) : 0,
                     'view_count'     => isset($item->views) ? count($item->views) : 0,
-                    'profile_pic'   => isset($item->user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->user->profile_pic : '',
+                    'profile_pic'   => isset($item->user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->tag_user->profile_pic : '',
                     'is_read'       => 0
                 ];
             }
@@ -101,12 +111,12 @@ class PostsTransformer extends Transformer
                     "description"   =>  $item->description,
                     "is_image"      => (int) $item->is_image,
                     "is_video"      => (int) $item->is_video,
-                    'name'          => $this->nulltoBlank($item->user->name),
-                    'email'         => $this->nulltoBlank($item->user->email),
-                    'phone'         => $this->nulltoBlank($item->user->phone),
+                    'name'          => $this->nulltoBlank($tagUser),
+                    'email'         => $this->nulltoBlank($item->tag_user->email),
+                    'phone'         => $this->nulltoBlank($item->tag_user->phone),
                     'viewCount'     => isset($item->views) ? count($item->views) : 0,
                     'view_count'     => isset($item->views) ? count($item->views) : 0,
-                    'profile_pic'   => isset($item->user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->user->profile_pic : '',
+                    'profile_pic'   => isset($item->tag_user->profile_pic) ? URL::to('/').'/uploads/user/' . $item->tag_user->profile_pic : '',
                     'is_read'       => 1
                 ];
             }
