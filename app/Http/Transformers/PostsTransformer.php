@@ -60,10 +60,10 @@ class PostsTransformer extends Transformer
         {
             $item->user = (object)$item->user;
 
-            if(!in_array($item->tag_user_id, $myConnections))
+            /*if(!in_array($item->tag_user_id, $myConnections))
             {
                 continue;
-            }
+            }*/
             
             $isRead     = in_array($item->id, $userReadPostIds) ? 1 :0;
 
@@ -72,11 +72,11 @@ class PostsTransformer extends Transformer
                 continue;
             }
 
-            if($item->tag_user_id == $user->id)
+            /*if($item->tag_user_id == $user->id)
             {
-                continue;
-            }
-
+                //continue;
+            }*/
+            
             $tagUser = explode(' ', $item->tag_user->name);
             $tagUser = ucfirst($tagUser[0]);
 
@@ -142,10 +142,10 @@ class PostsTransformer extends Transformer
             $item->user = (object)$item->user;
             $isRead     = in_array($item->id, $userReadPostIds) ? 1 :0;
 
-            if($user->id == $item->user_id)
+            /*if($user->id == $item->user_id)
             {
                 continue;
-            }
+            }*/
 
             $response[] = [
                 "post_id"       => (int) $item->id, 

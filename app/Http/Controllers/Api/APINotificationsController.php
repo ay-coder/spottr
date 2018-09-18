@@ -169,4 +169,18 @@ class APINotificationsController extends BaseApiController
             'reason' => 'Invalid Inputs'
         ], 'Something went wrong !');
     }
+
+    public function clearAll(Request $request)
+    {
+        $userInfo   = $this->getAuthenticatedUser();       
+        $status     = $this->repository->model->where([
+            'to_user_id' => $userInfo->id
+        ])->update([
+            'is_read' => 1
+        ]);
+
+        return $this->successResponse([
+            'success' => 'All Notifications cleared'
+        ], 'All Notifications cleared');
+    }
 }

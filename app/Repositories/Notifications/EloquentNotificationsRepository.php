@@ -230,7 +230,11 @@ class EloquentNotificationsRepository extends DbRepository
      */ 
     public function getAll($userId = null, $orderBy = 'id', $sort = 'desc')
     {
-        return $this->model->with(['user', 'to_user'])->where('to_user_id', $userId)->orderBy($orderBy, $sort)->get();
+        return $this->model->with(['user', 'to_user'])->where([
+            'to_user_id' => $userId,
+            'is_read'    => 0
+
+            ])->orderBy($orderBy, $sort)->get();
     }
 
     /**
