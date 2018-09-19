@@ -314,7 +314,7 @@ class UsersController extends BaseApiController
             $myRequestIds = $connectionModel->where([
                 'user_id'       => $userInfo->id,
                 'is_accepted'   => 0
-            ])->pluck('user_id')->toArray();
+            ])->pluck('other_user_id')->toArray();
             
             $isRequested = in_array($user->id, $userRequestIds) ? 1 : 0;
 
