@@ -311,11 +311,21 @@ class UsersController extends BaseApiController
             
             $isRequested = in_array($userInfo->id, $userRequestIds) ? 1 : 0;
 
+            $myRequestIds = $connectionModel->where([
+                'user_id'       => $user->id,
+                'is_accepted'   => 0
+            ])->pluck('user_id')->toArray();
+            
+            $isRequested = in_array($userInfo->id, $userRequestIds) ? 1 : 0;
+
+            $meRequested = in_array($userInfo->id, $myRequestIds) ? 1 : 0;
+
             if($user)
             {
                  $data = [
                     'is_connected'      => $isConnected,
                     'is_same_user'      => $sameUser,
+                    'is_my_request'     => $meRequested,
                     'show_connect_btn'  => $showConnectionBtn,
                     'is_requested'      => $isRequested
                 ];

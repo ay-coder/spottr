@@ -66,7 +66,7 @@ class APICommentsController extends BaseApiController
         }
 
         return $this->setStatusCode(400)->failureResponse([
-            'message' => 'Unable to find Comments!'
+            'message' => 'No Results found'
             ], 'No Comments Found !');
     }
 

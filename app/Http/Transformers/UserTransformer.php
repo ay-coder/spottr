@@ -62,6 +62,7 @@ class UserTransformer extends Transformer
             'postRequestCount'  => (int) $postRequestCount,
             'is_connected'      => $data->is_connected,
             'is_same_user'      => $data->is_same_user,
+            'is_my_request'     => $data->is_my_request,
             'is_requested'      => $data->is_connected == 1 ? 0 : $data->is_requested,
             'show_connect_btn'  => $data->show_connect_btn
         ];

@@ -62,7 +62,7 @@ class APINotificationsController extends BaseApiController
         }
 
         return $this->setStatusCode(400)->failureResponse([
-            'message' => 'Unable to find notifications!'
+            'message' => 'No Results found'
             ], 'No Notifications Found !');
     }
 

@@ -92,7 +92,7 @@ class APIPostsController extends BaseApiController
         }
 
         return $this->setStatusCode(400)->failureResponse([
-            'message' => 'Unable to find posts!'
+            'message' => 'No Results found'
             ], 'No Posts Found !');
     }
 
@@ -126,7 +126,7 @@ class APIPostsController extends BaseApiController
         }
 
         return $this->setStatusCode(400)->failureResponse([
-            'message' => 'Unable to find posts!'
+            'message' => 'No Results found'
             ], 'No Posts Found !');
     }
 
@@ -382,7 +382,7 @@ class APIPostsController extends BaseApiController
         }
 
         return $this->setStatusCode(400)->failureResponse([
-            'message' => 'Unable to find post request'
+            'message' => 'No Results found'
             ], 'No Posts Request Found !');
     } 
 
@@ -484,7 +484,7 @@ class APIPostsController extends BaseApiController
         }
            
         return $this->setStatusCode(400)->failureResponse([
-            'message' => 'Unable to find post request'
+            'message' => 'No Results found'
             ], 'No Posts Request Found !');
     }   
 }
