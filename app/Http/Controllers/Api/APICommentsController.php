@@ -100,29 +100,34 @@ class APICommentsController extends BaseApiController
         $input      = array_merge($request->all(), ['user_id' => $userInfo->id]);
         $model      = $this->repository->create($input);
 
+
         if($model)
         {
-            $text       = $userInfo->name . '  has commented on your post';
-            $payload    = [
-                'mtitle'    => '',
-                'mdesc'     => $text,
-                'post_id'   => $model->post_id,
-                'comment_id' => $model->id,
-                'mtype'      => 'NEW_COMMENT'
-            ];
-            
-            Notifications::create([
-                'user_id'           => $tagUser->id,
-                'to_user_id'        => $userInfo->id,
-                'description'       => $text,
-                'post_id'           => $model->post_id,
-                'comment_id'        => $model->id,
-                'notification_type' => 'NEW_POST'
-            ]);
 
-            if(isset($tagUser->device_token))
+            if($userInf->id != $postInfo->user_id)
             {
-                PushNotification::iOS($payload, $tagUser->device_token);
+                $text       = $userInfo->name . '  has commented on your post';
+                $payload    = [
+                    'mtitle'    => '',
+                    'mdesc'     => $text,
+                    'post_id'   => $model->post_id,
+                    'comment_id' => $model->id,
+                    'mtype'      => 'NEW_COMMENT'
+                ];
+                
+                Notifications::create([
+                    'user_id'           => $tagUser->id,
+                    'to_user_id'        => $userInfo->id,
+                    'description'       => $text,
+                    'post_id'           => $model->post_id,
+                    'comment_id'        => $model->id,
+                    'notification_type' => 'NEW_POST'
+                ]);
+
+                if(isset($tagUser->device_token))
+                {
+                    PushNotification::iOS($payload, $tagUser->device_token);
+                }
             }
 
             return $this->successResponse(['message' => 'Comment Created Successfully!'], 'Comments is Created Successfully');
